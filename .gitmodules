@@ -1,6 +1,6 @@
-[submodule "forum-sevice/proto-service/forum-protos"]
-	path = forum-sevice/proto-service/forum-protos
-	url = git@github.com:Azizbek-Qodirov/forum-protos.git
 [submodule "forum-sevice/forum-protos"]
 	path = forum-sevice/forum-protos
+	url = git@github.com:Azizbek-Qodirov/forum-protos.git
+[submodule "api-gateway/forum-protos"]
+	path = api-gateway/forum-protos
 	url = git@github.com:Azizbek-Qodirov/forum-protos.git

@@ -3,9 +3,9 @@ package client
 import (
 	"encoding/json"
 	"fmt"
+	"forum-service/models"
 	"io"
 	"net/http"
-	"reservation-service/models"
 )
 
 func GetUser(id string) (*models.User, error) {

@@ -2,22 +2,20 @@ package service
 
 import (
 	"context"
-	r "reservation-service/genproto/reservation"
-	st "reservation-service/storage/postgres"
+	pb "forum-service/forum-protos/genprotos"
+	st "forum-service/storage"
 )
 
 type PostService struct {
 	storage st.Storage
-	r.UnimplementedPostServiceServer
+	pb.UnimplementedPostServiceServer
 }
 
 func NewPostService(storage *st.Storage) *PostService {
-	return &PostService{
-		storage: *storage,
-	}
+	return &PostService{storage: *storage}
 }
 
-func (s *PostService) Create(ctx context.Context, post *r.PostReq) (*r.Post, error) {
+func (s *PostService) Create(ctx context.Context, post *pb.PostCReqOrCResOrGResOrUResp) (*pb.PostCReqOrCResOrGResOrUResp, error) {
 	resp, err := s.storage.PostS.Create(post)
 
 	if err != nil {
@@ -27,8 +25,8 @@ func (s *PostService) Create(ctx context.Context, post *r.PostReq) (*r.Post, err
 	return resp, nil
 }
 
-func (s *PostService) Get(ctx context.Context, idReq *r.GetByIdReq) (*r.PostRes, error) {
-	resp, err := s.storage.PostS.Get(idReq)
+func (s *PostService) GetByID(ctx context.Context, idReq *pb.PostGReqOrDReq) (*pb.PostCReqOrCResOrGResOrUResp, error) {
+	resp, err := s.storage.PostS.GetByID(idReq)
 
 	if err != nil {
 		return nil, err
@@ -37,18 +35,18 @@ func (s *PostService) Get(ctx context.Context, idReq *r.GetByIdReq) (*r.PostRes,
 	return resp, nil
 }
 
-func (s *PostService) GetAll(ctx context.Context, allPosts *r.GetAllPostReq) (*r.GetAllPostRes, error) {
-	items, err := s.storage.PostS.GetAll(allPosts)
+func (s *PostService) GetAll(ctx context.Context, allPosts *pb.PostGAReq) (*pb.PostGARes, error) {
+	posts, err := s.storage.PostS.GetAll(allPosts)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return items, nil
+	return posts, nil
 }
 
-func (s *PostService) Update(ctx context.Context, post *r.PostUpdate) (*r.Post, error) {
-	resp, err := s.storage.PostS.Update(post)
+func (s *PostService) Update(ctx context.Context, reservation *pb.PostUReq) (*pb.PostCReqOrCResOrGResOrUResp, error) {
+	resp, err := s.storage.PostS.Update(reservation)
 
 	if err != nil {
 		return nil, err
@@ -57,7 +55,7 @@ func (s *PostService) Update(ctx context.Context, post *r.PostUpdate) (*r.Post, 
 	return resp, nil
 }
 
-func (s *PostService) Delete(ctx context.Context, idReq *r.GetByIdReq) (*r.Void, error) {
+func (s *PostService) Delete(ctx context.Context, idReq *pb.PostGReqOrDReq) (*pb.Void, error) {
 	_, err := s.storage.PostS.Delete(idReq)
 
 	return nil, err

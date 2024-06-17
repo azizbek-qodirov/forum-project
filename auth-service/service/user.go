@@ -28,3 +28,7 @@ func (u *UserService) GetProfile(req *models.GetProfileReq) (*models.GetProfileR
 func (u *UserService) EmailExists(email string) (bool, error) {
 	return u.UM.EmailExists(email)
 }
+
+func (u *UserService) GetByID(id *models.GetProfileByIdReq) (*models.GetProfileByIdResp, error){
+	return u.UM.GetByID(id)
+}

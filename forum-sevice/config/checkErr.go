@@ -1,7 +1,7 @@
 package config
 
 import (
-	"reservation-service/config/logger"
+	"forum-service/config/logger"
 )
 
 type ErrorManager struct {

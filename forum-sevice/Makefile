@@ -32,3 +32,7 @@ lint: ## Run golangci-lint with printing to stdout
 
 swag-gen:
 	~/go/bin/swag init -g ./api/router.go -o api/docs force 1
+
+# protoc --go_out=forum-protos/ \
+# --go-grpc_out=forum-protos/ \
+# forum-protos/*.proto

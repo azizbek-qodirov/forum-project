@@ -3,7 +3,6 @@ package handlers
 import (
 	"auth-service/api/token"
 	"auth-service/models"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -84,7 +83,6 @@ func (h *HTTPHandler) Login(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"Invalid email or password": err.Error()})
 		return
 	}
-	fmt.Println(user.Password, req.Password)
 	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.Password)); err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"Invalid email or password...": err.Error()})
 		return
@@ -117,7 +115,6 @@ func (h *HTTPHandler) Profile(c *gin.Context) {
 	email := claims.(jwt.MapClaims)["email"].(string)
 	user, err := h.US.GetProfile(&models.GetProfileReq{Email: email})
 	if err != nil {
-		fmt.Println(err)
 		c.JSON(http.StatusInternalServerError, gin.H{"Server error": err.Error()})
 		return
 	}
@@ -127,5 +124,15 @@ func (h *HTTPHandler) Profile(c *gin.Context) {
 		return
 	}
 
+	c.JSON(http.StatusOK, user)
+}
+
+func (h *HTTPHandler) GetByID(c *gin.Context) {
+	id := &models.GetProfileByIdReq{ID: c.Param("id")}
+	user, err := h.US.GetByID(id)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"Couldn't get the user": err.Error()})
+		return
+	}
 	c.JSON(http.StatusOK, user)
 }

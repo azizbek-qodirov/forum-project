@@ -2,32 +2,21 @@ package service
 
 import (
 	"context"
-	r "reservation-service/genproto/reservation"
-	st "reservation-service/storage/postgres"
+	pb "forum-service/forum-protos/genprotos"
+	st "forum-service/storage"
 )
 
-type RestaurantService struct {
+type TagService struct {
 	storage st.Storage
-	r.UnimplementedRestaurantServiceServer
+	pb.UnimplementedTagServiceServer
 }
 
-func NewRestaurantService(storage *st.Storage) *RestaurantService {
-	return &RestaurantService{
-		storage: *storage,
-	}
+func NewTagService(storage *st.Storage) *TagService {
+	return &TagService{storage: *storage}
 }
 
-func (s *RestaurantService) Create(ctx context.Context, restaurant *r.RestaurantReq) (*r.Restaurant, error) {
-	resp, err := s.storage.RestaurantS.Create(restaurant)
-	if err != nil {
-		return nil, err
-	}
-
-	return resp, nil
-}
-
-func (s *RestaurantService) Get(ctx context.Context, idReq *r.GetByIdReq) (*r.Restaurant, error) {
-	resp, err := s.storage.RestaurantS.Get(idReq)
+func (s *TagService) Create(ctx context.Context, tag *pb.TagCReqOrCRes) (*pb.TagCReqOrCRes, error) {
+	resp, err := s.storage.TagS.Create(tag)
 
 	if err != nil {
 		return nil, err
@@ -36,18 +25,8 @@ func (s *RestaurantService) Get(ctx context.Context, idReq *r.GetByIdReq) (*r.Re
 	return resp, nil
 }
 
-func (s *RestaurantService) GetAll(ctx context.Context, allRestaurants *r.GetAllRestaurantReq) (*r.GetAllRestaurantRes, error) {
-	restaurants, err := s.storage.RestaurantS.GetAll(allRestaurants)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return restaurants, nil
-}
-
-func (s *RestaurantService) Update(ctx context.Context, restaurant *r.RestaurantUpdate) (*r.Restaurant, error) {
-	resp, err := s.storage.RestaurantS.Update(restaurant)
+func (s *TagService) GetByID(ctx context.Context, idReq *pb.TagGReqOrDReq) (*pb.TagGAResOrPopularRes, error) {
+	resp, err := s.storage.TagS.GetByID(idReq)
 
 	if err != nil {
 		return nil, err
@@ -56,8 +35,18 @@ func (s *RestaurantService) Update(ctx context.Context, restaurant *r.Restaurant
 	return resp, nil
 }
 
-func (s *RestaurantService) Delete(ctx context.Context, idReq *r.GetByIdReq) (*r.Void, error) {
-	_, err := s.storage.RestaurantS.Delete(idReq)
+func (s *TagService) GetAll(ctx context.Context, allTags *pb.TagGAReq) (*pb.TagGAResOrPopularRes, error) {
+	tags, err := s.storage.TagS.GetAll(allTags)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return tags, nil
+}
+
+func (s *TagService) Delete(ctx context.Context, idReq *pb.TagGReqOrDReq) (*pb.Void, error) {
+	_, err := s.storage.TagS.Delete(idReq)
 
 	return nil, err
 }

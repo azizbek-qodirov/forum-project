@@ -39,3 +39,13 @@ func (m *UserManager) EmailExists(email string) (bool, error) {
 	}
 	return count > 0, nil
 }
+
+func (m *UserManager) GetByID(id *models.GetProfileByIdReq) (*models.GetProfileByIdResp, error) {
+	query := "SELECT id, username, email FROM users WHERE id = $1"
+	user := &models.GetProfileByIdResp{}
+	err := m.Conn.QueryRow(query, id).Scan(user.ID, user.Username, user.Email)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
+}

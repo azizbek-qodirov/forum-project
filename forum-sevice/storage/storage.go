@@ -1,41 +1,44 @@
 package storage
 
 import (
-	r "reservation-service/genproto/reservation"
+	pb "forum-service/forum-protos/genprotos"
 )
 
 type StorageI interface {
-	Reservation() ReservationI
+	Post() PostI
+	Comment() CommentI
+	Category() CategoryI
+	Tag() TagI
 }
 
-type RestaurantI interface {
-	Create(*r.RestaurantReq) (*r.Restaurant, error)
-	Get(*r.GetByIdReq) (*r.Restaurant, error)
-	GetAll(*r.GetAllRestaurantReq) (*r.GetAllRestaurantRes, error)
-	Update(*r.RestaurantUpdate) (*r.Restaurant, error)
-	Delete(*r.GetByIdReq) (*r.Void, error)
+type PostI interface {
+	Create(*pb.PostCReqOrCResOrGResOrUResp) (*pb.PostCReqOrCResOrGResOrUResp, error)
+	GetByID(*pb.PostGReqOrDReq) (*pb.PostCReqOrCResOrGResOrUResp, error)
+	GetAll(*pb.PostGAReq) (*pb.PostGARes, error)
+	Update(*pb.PostUReq) (*pb.PostCReqOrCResOrGResOrUResp, error)
+	Delete(*pb.PostGReqOrDReq) (*pb.Void, error)
 }
 
-type ReservationI interface {
-	Create(*r.ReservationReq) (*r.Reservation, error)
-	Get(*r.GetByIdReq) (*r.ReservationRes, error)
-	GetAll(*r.GetAllReservationReq) (*r.GetAllReservationRes, error)
-	Update(*r.ReservationUpdate) (*r.Reservation, error)
-	Delete(*r.GetByIdReq) (*r.Void, error)
+type CommentI interface {
+	Create(*pb.CommentCReqOrCResOrGResOrURes) (*pb.CommentCReqOrCResOrGResOrURes, error)
+	GetByID(*pb.CommentGReqOrDReq) (*pb.CommentCReqOrCResOrGResOrURes, error)
+	GetAll(*pb.CommentGAReq) (*pb.CommentGARes, error)
+	Update(*pb.CommentUReq) (*pb.CommentCReqOrCResOrGResOrURes, error)
+	Delete(*pb.CommentGReqOrDReq) (*pb.Void, error)
 }
 
-type ReservationOrderI interface {
-	Create(*r.ReservationOrderReq) (*r.ReservationOrderRes, error)
-	Get(*r.GetByIdReq) (*r.ReservationOrderRes, error)
-	GetAll(*r.GetAllReservationOrderReq) (*r.GetAllReservationOrderRes, error)
-	Update(*r.ReservationOrderUpdate) (*r.ReservationOrderRes, error)
-	Delete(*r.GetByIdReq) (*r.Void, error)
+type CategoryI interface {
+	Create(*pb.CategoryCReqOrCResOrGResOrUReqOrURes) (*pb.CategoryCReqOrCResOrGResOrUReqOrURes, error)
+	GetByID(*pb.CategoryGReqOrDReq) (*pb.CategoryCReqOrCResOrGResOrUReqOrURes, error)
+	GetAll(*pb.CategoryGAReq) (*pb.CategoryGARes, error)
+	Update(*pb.CategoryCReqOrCResOrGResOrUReqOrURes) (*pb.CategoryCReqOrCResOrGResOrUReqOrURes, error)
+	Delete(*pb.CategoryGReqOrDReq) (*pb.Void, error)
 }
 
-type MenuI interface {
-	Create(*r.MenuReq) (*r.Menu, error)
-	Get(*r.GetByIdReq) (*r.MenuRes, error)
-	GetAll(*r.GetAllMenuReq) (*r.GetAllMenuRes, error)
-	Update(*r.MenuUpdate) (*r.Menu, error)
-	Delete(*r.GetByIdReq) (*r.Void, error)
+type TagI interface {
+	Create(*pb.TagCReqOrCRes) (*pb.TagCReqOrCRes, error)
+	GetByID(*pb.TagGReqOrDReq) ([]*pb.TagCReqOrCRes, error)
+	GetAll(*pb.TagGAReq) (*pb.TagGAResOrPopularRes, error)
+	Delete(*pb.TagGReqOrDReq) (*pb.Void, error)
+	Popular(*pb.Pagination) (*pb.TagGAResOrPopularRes, error)
 }
