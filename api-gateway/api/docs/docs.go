@@ -15,65 +15,14 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/menu": {
-            "post": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Create a new menu item",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "menu"
-                ],
-                "summary": "Create menu item",
-                "parameters": [
-                    {
-                        "description": "Menu data",
-                        "name": "menu",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/reservation.MenuReq"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/reservation.Menu"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid request payload",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Server error",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/menu/{id}": {
+        "/categories": {
             "get": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
-                "description": "Get a menu item by ID",
+                "description": "Get all categories",
                 "consumes": [
                     "application/json"
                 ],
@@ -81,183 +30,25 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "menu"
+                    "category"
                 ],
-                "summary": "Get menu item",
+                "summary": "Get all categories",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Menu ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/reservation.MenuRes"
-                        }
+                        "description": "category_id",
+                        "name": "category_id",
+                        "in": "query"
                     },
-                    "400": {
-                        "description": "Invalid menu item ID",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Server error",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            },
-            "put": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Update an existing menu item",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "menu"
-                ],
-                "summary": "Update menu item",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Menu ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Updated menu item data",
-                        "name": "menu",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/reservation.MenuReq"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/reservation.Menu"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid request payload",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "404": {
-                        "description": "Menu item not found",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Server error",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Delete a menu item by ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "menu"
-                ],
-                "summary": "Delete menu item",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Menu ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Menu item deleted",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid menu item ID",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "404": {
-                        "description": "Menu item not found",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Server error",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/menus": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Get all menu items",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "menu"
-                ],
-                "summary": "Get all menu items",
-                "parameters": [
                     {
                         "type": "integer",
-                        "description": "Limit",
+                        "description": "limit",
                         "name": "limit",
                         "in": "query"
                     },
                     {
                         "type": "integer",
-                        "description": "Offset",
+                        "description": "offset",
                         "name": "offset",
                         "in": "query"
                     }
@@ -266,7 +57,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/reservation.GetAllMenuRes"
+                            "$ref": "#/definitions/genprotos.CategoryGARes"
                         }
                     },
                     "400": {
@@ -284,131 +75,14 @@ const docTemplate = `{
                 }
             }
         },
-        "/payment/{id}": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Get a payment by ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "payment"
-                ],
-                "summary": "Get payment",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Payment ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/payment.PaymentGetByIdResp"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "404": {
-                        "description": "Payment not found",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Server error",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            },
-            "put": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Update a payment by id",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "payment"
-                ],
-                "summary": "Update payment",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Payment ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Updated payment data",
-                        "name": "payment",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/payment.PaymentCreateReq"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/payment.PaymentGetByIdResp"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "404": {
-                        "description": "Payment not found",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Server error",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/reservation": {
+        "/category": {
             "post": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
-                "description": "Create a new reservation",
+                "description": "Create a new category",
                 "consumes": [
                     "application/json"
                 ],
@@ -416,17 +90,17 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "reservation"
+                    "category"
                 ],
-                "summary": "Create reservation",
+                "summary": "Create category",
                 "parameters": [
                     {
-                        "description": "Reservation data",
-                        "name": "reservation",
+                        "description": "Category data",
+                        "name": "category",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/reservation.ReservationReq"
+                            "$ref": "#/definitions/genprotos.CategoryCReqOrCResOrGResOrUReqOrURes"
                         }
                     }
                 ],
@@ -434,11 +108,11 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/reservation.Reservation"
+                            "$ref": "#/definitions/genprotos.CategoryCReqOrCResOrGResOrUReqOrURes"
                         }
                     },
-                    "401": {
-                        "description": "Unauthorized",
+                    "400": {
+                        "description": "Invalid request payload",
                         "schema": {
                             "type": "string"
                         }
@@ -452,14 +126,14 @@ const docTemplate = `{
                 }
             }
         },
-        "/reservation/{id}": {
+        "/category/{id}": {
             "get": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
-                "description": "Get a reservation by ID",
+                "description": "Get a category by ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -467,13 +141,13 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "reservation"
+                    "category"
                 ],
-                "summary": "Get reservation",
+                "summary": "Get category",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Reservation ID",
+                        "description": "Category ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -483,17 +157,11 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/reservation.ReservationRes"
+                            "$ref": "#/definitions/genprotos.CategoryCReqOrCResOrGResOrUReqOrURes"
                         }
                     },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "404": {
-                        "description": "Reservation not found",
+                    "400": {
+                        "description": "Invalid category  ID",
                         "schema": {
                             "type": "string"
                         }
@@ -512,7 +180,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Update an existing reservation",
+                "description": "Update an existing category",
                 "consumes": [
                     "application/json"
                 ],
@@ -520,24 +188,24 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "reservation"
+                    "category"
                 ],
-                "summary": "Update reservation",
+                "summary": "Update category",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Reservation ID",
+                        "description": "Category ID",
                         "name": "id",
                         "in": "path",
                         "required": true
                     },
                     {
-                        "description": "Updated reservation data",
-                        "name": "reservation",
+                        "description": "Updated category data",
+                        "name": "category",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/reservation.ReservationReq"
+                            "$ref": "#/definitions/genprotos.CategoryCReqOrCResOrGResOrUReqOrURes"
                         }
                     }
                 ],
@@ -545,17 +213,17 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/reservation.ReservationReq"
+                            "$ref": "#/definitions/genprotos.CategoryCReqOrCResOrGResOrUReqOrURes"
                         }
                     },
-                    "401": {
-                        "description": "Unauthorized",
+                    "400": {
+                        "description": "Invalid request payload",
                         "schema": {
                             "type": "string"
                         }
                     },
                     "404": {
-                        "description": "Reservation not found",
+                        "description": "Category not found",
                         "schema": {
                             "type": "string"
                         }
@@ -574,7 +242,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Delete a reservation by ID",
+                "description": "Delete a category  by ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -582,13 +250,13 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "reservation"
+                    "category"
                 ],
-                "summary": "Delete reservation",
+                "summary": "Delete category",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Reservation ID",
+                        "description": "Category ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -596,19 +264,19 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Reservation deleted",
+                        "description": "Category  deleted",
                         "schema": {
                             "type": "string"
                         }
                     },
-                    "401": {
-                        "description": "Unauthorized",
+                    "400": {
+                        "description": "Invalid category  ID",
                         "schema": {
                             "type": "string"
                         }
                     },
                     "404": {
-                        "description": "Reservation not found",
+                        "description": "Category  not found",
                         "schema": {
                             "type": "string"
                         }
@@ -622,14 +290,14 @@ const docTemplate = `{
                 }
             }
         },
-        "/reservation_order": {
+        "/comment": {
             "post": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
-                "description": "Create a new reservation order",
+                "description": "Create a new comment",
                 "consumes": [
                     "application/json"
                 ],
@@ -637,17 +305,17 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "reservation_order"
+                    "comment"
                 ],
-                "summary": "Create reservation order",
+                "summary": "Create comment",
                 "parameters": [
                     {
-                        "description": "Reservation order data",
-                        "name": "reservation_order",
+                        "description": "Comment data",
+                        "name": "comment",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/reservation.ReservationOrderUpdate"
+                            "$ref": "#/definitions/genprotos.CommentCReqOrCResOrGResOrURes"
                         }
                     }
                 ],
@@ -655,7 +323,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/reservation.ReservationOrderRes"
+                            "$ref": "#/definitions/genprotos.CommentCReqOrCResOrGResOrURes"
                         }
                     },
                     "400": {
@@ -673,14 +341,14 @@ const docTemplate = `{
                 }
             }
         },
-        "/reservation_order/{id}": {
+        "/comment/{id}": {
             "get": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
-                "description": "Get a reservation order by ID",
+                "description": "Get a comment by ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -688,13 +356,13 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "reservation_order"
+                    "comment"
                 ],
-                "summary": "Get reservation order",
+                "summary": "Get comment",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Reservation order ID",
+                        "description": "Comment ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -704,11 +372,11 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/reservation.ReservationOrderRes"
+                            "$ref": "#/definitions/genprotos.CommentCReqOrCResOrGResOrURes"
                         }
                     },
                     "400": {
-                        "description": "Invalid reservation order ID",
+                        "description": "Invalid comment  ID",
                         "schema": {
                             "type": "string"
                         }
@@ -727,7 +395,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Update an existing reservation order",
+                "description": "Update an existing comment",
                 "consumes": [
                     "application/json"
                 ],
@@ -735,24 +403,24 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "reservation_order"
+                    "comment"
                 ],
-                "summary": "Update reservation order",
+                "summary": "Update comment",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Reservation order ID",
+                        "description": "Comment ID",
                         "name": "id",
                         "in": "path",
                         "required": true
                     },
                     {
-                        "description": "Updated reservation order data",
-                        "name": "reservation_order",
+                        "description": "Updated comment data",
+                        "name": "comment",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/reservation.ReservationOrderUpdate"
+                            "$ref": "#/definitions/genprotos.CommentUReq"
                         }
                     }
                 ],
@@ -760,7 +428,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/reservation.ReservationOrderUpdate"
+                            "$ref": "#/definitions/genprotos.CommentCReqOrCResOrGResOrURes"
                         }
                     },
                     "400": {
@@ -770,7 +438,7 @@ const docTemplate = `{
                         }
                     },
                     "404": {
-                        "description": "Reservation order not found",
+                        "description": "Comment not found",
                         "schema": {
                             "type": "string"
                         }
@@ -789,7 +457,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Delete a reservation order by ID",
+                "description": "Delete a comment  by ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -797,13 +465,13 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "reservation_order"
+                    "comment"
                 ],
-                "summary": "Delete reservation order",
+                "summary": "Delete comment",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Reservation order ID",
+                        "description": "Comment ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -811,19 +479,19 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Reservation order deleted",
+                        "description": "Comment  deleted",
                         "schema": {
                             "type": "string"
                         }
                     },
                     "400": {
-                        "description": "Invalid reservation order ID",
+                        "description": "Invalid comment  ID",
                         "schema": {
                             "type": "string"
                         }
                     },
                     "404": {
-                        "description": "Reservation order not found",
+                        "description": "Comment  not found",
                         "schema": {
                             "type": "string"
                         }
@@ -837,14 +505,14 @@ const docTemplate = `{
                 }
             }
         },
-        "/reservation_orders": {
+        "/comments": {
             "get": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
-                "description": "Get all reservation orders",
+                "description": "Get all comments",
                 "consumes": [
                     "application/json"
                 ],
@@ -852,71 +520,23 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "reservation_order"
+                    "comment"
                 ],
-                "summary": "Get all reservation orders",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Limit",
-                        "name": "limit",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Offset",
-                        "name": "offset",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/reservation.GetAllReservationOrderRes"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid parameters",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Server error",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/reservations": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Get all reservations",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "reservation"
-                ],
-                "summary": "Get all reservations",
+                "summary": "Get all comments",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "User ID",
+                        "description": "user_id",
                         "name": "user_id",
                         "in": "query"
                     },
                     {
+                        "type": "string",
+                        "description": "post_id",
+                        "name": "post_id",
+                        "in": "query"
+                    },
+                    {
                         "type": "integer",
                         "description": "Limit",
                         "name": "limit",
@@ -933,17 +553,11 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/reservation.GetAllReservationRes"
+                            "$ref": "#/definitions/genprotos.CommentGARes"
                         }
                     },
                     "400": {
                         "description": "Invalid parameters",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
                         "schema": {
                             "type": "string"
                         }
@@ -957,14 +571,14 @@ const docTemplate = `{
                 }
             }
         },
-        "/restaurant": {
+        "/post": {
             "post": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
-                "description": "Create a new restaurant",
+                "description": "Create a new post",
                 "consumes": [
                     "application/json"
                 ],
@@ -972,17 +586,17 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "restaurant"
+                    "post"
                 ],
-                "summary": "Create restaurant",
+                "summary": "Create post",
                 "parameters": [
                     {
-                        "description": "Restaurant data",
-                        "name": "restaurant",
+                        "description": "Post data",
+                        "name": "post",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/reservation.RestaurantReq"
+                            "$ref": "#/definitions/genprotos.PostCReqOrCResOrGResOrUResp"
                         }
                     }
                 ],
@@ -990,7 +604,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/reservation.Restaurant"
+                            "$ref": "#/definitions/genprotos.PostCReqOrCResOrGResOrUResp"
                         }
                     },
                     "400": {
@@ -1008,14 +622,14 @@ const docTemplate = `{
                 }
             }
         },
-        "/restaurant/{id}": {
+        "/post/{id}": {
             "get": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
-                "description": "Get a restaurant by ID",
+                "description": "Get a post by ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -1023,13 +637,13 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "restaurant"
+                    "post"
                 ],
-                "summary": "Get restaurant",
+                "summary": "Get post",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Restaurant ID",
+                        "description": "Post ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -1039,11 +653,11 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/reservation.Restaurant"
+                            "$ref": "#/definitions/genprotos.PostCReqOrCResOrGResOrUResp"
                         }
                     },
                     "400": {
-                        "description": "Invalid restaurant ID",
+                        "description": "Invalid post  ID",
                         "schema": {
                             "type": "string"
                         }
@@ -1062,7 +676,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Update an existing restaurant",
+                "description": "Update an existing post",
                 "consumes": [
                     "application/json"
                 ],
@@ -1070,24 +684,24 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "restaurant"
+                    "post"
                 ],
-                "summary": "Update restaurant",
+                "summary": "Update post",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Restaurant ID",
+                        "description": "Post ID",
                         "name": "id",
                         "in": "path",
                         "required": true
                     },
                     {
-                        "description": "Updated restaurant data",
-                        "name": "restaurant",
+                        "description": "Updated post data",
+                        "name": "post",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/reservation.RestaurantReq"
+                            "$ref": "#/definitions/genprotos.PostUReq"
                         }
                     }
                 ],
@@ -1095,7 +709,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/reservation.RestaurantReq"
+                            "$ref": "#/definitions/genprotos.PostCReqOrCResOrGResOrUResp"
                         }
                     },
                     "400": {
@@ -1105,7 +719,7 @@ const docTemplate = `{
                         }
                     },
                     "404": {
-                        "description": "Restaurant not found",
+                        "description": "Post not found",
                         "schema": {
                             "type": "string"
                         }
@@ -1124,7 +738,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Delete a restaurant by ID",
+                "description": "Delete a post  by ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -1132,13 +746,13 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "restaurant"
+                    "post"
                 ],
-                "summary": "Delete restaurant",
+                "summary": "Delete post",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Restaurant ID",
+                        "description": "Post ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -1146,19 +760,19 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Restaurant deleted",
+                        "description": "Post  deleted",
                         "schema": {
                             "type": "string"
                         }
                     },
                     "400": {
-                        "description": "Invalid restaurant ID",
+                        "description": "Invalid post  ID",
                         "schema": {
                             "type": "string"
                         }
                     },
                     "404": {
-                        "description": "Restaurant not found",
+                        "description": "Post  not found",
                         "schema": {
                             "type": "string"
                         }
@@ -1172,14 +786,14 @@ const docTemplate = `{
                 }
             }
         },
-        "/restaurants": {
+        "/posts": {
             "get": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
-                "description": "Get all restaurants",
+                "description": "Get all posts",
                 "consumes": [
                     "application/json"
                 ],
@@ -1187,19 +801,49 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "restaurant"
+                    "post"
                 ],
-                "summary": "Get all restaurants",
+                "summary": "Get all posts",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "user_id",
+                        "name": "user_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "category_id",
+                        "name": "category_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "title",
+                        "name": "title",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "body",
+                        "name": "body",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "tags",
+                        "name": "tags",
+                        "in": "query"
+                    },
+                    {
                         "type": "integer",
-                        "description": "Limit",
+                        "description": "limit",
                         "name": "limit",
                         "in": "query"
                     },
                     {
                         "type": "integer",
-                        "description": "Offset",
+                        "description": "offset",
                         "name": "offset",
                         "in": "query"
                     }
@@ -1208,7 +852,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/reservation.GetAllRestaurantRes"
+                            "$ref": "#/definitions/genprotos.PostGARes"
                         }
                     },
                     "400": {
@@ -1228,157 +872,41 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "payment.PaymentCreateReq": {
+        "genprotos.CategoryCReqOrCResOrGResOrUReqOrURes": {
             "type": "object",
             "properties": {
-                "amount": {
-                    "type": "number"
-                },
-                "payment_method": {
-                    "type": "string"
-                },
-                "payment_status": {
-                    "type": "string"
-                },
-                "reservation_id": {
-                    "type": "string"
-                }
-            }
-        },
-        "payment.PaymentGetByIdResp": {
-            "type": "object",
-            "properties": {
-                "amount": {
-                    "type": "number"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "payment_method": {
-                    "type": "string"
-                },
-                "payment_status": {
-                    "type": "string"
-                },
-                "reservation_id": {
-                    "type": "string"
-                }
-            }
-        },
-        "reservation.GetAllMenuRes": {
-            "type": "object",
-            "properties": {
-                "menu": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/reservation.MenuRes"
-                    }
-                }
-            }
-        },
-        "reservation.GetAllReservationOrderRes": {
-            "type": "object",
-            "properties": {
-                "reservation_order": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/reservation.ReservationOrderRes"
-                    }
-                }
-            }
-        },
-        "reservation.GetAllReservationRes": {
-            "type": "object",
-            "properties": {
-                "reservation": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/reservation.ReservationRes"
-                    }
-                }
-            }
-        },
-        "reservation.GetAllRestaurantRes": {
-            "type": "object",
-            "properties": {
-                "restaurant": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/reservation.Restaurant"
-                    }
-                }
-            }
-        },
-        "reservation.Menu": {
-            "type": "object",
-            "properties": {
-                "description": {
-                    "type": "string"
-                },
-                "id": {
+                "category_id": {
                     "type": "string"
                 },
                 "name": {
                     "type": "string"
-                },
-                "price": {
-                    "type": "number"
-                },
-                "restaurant_id": {
-                    "type": "string"
                 }
             }
         },
-        "reservation.MenuReq": {
+        "genprotos.CategoryGARes": {
             "type": "object",
             "properties": {
-                "description": {
-                    "type": "string"
+                "categories": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/genprotos.CategoryCReqOrCResOrGResOrUReqOrURes"
+                    }
                 },
-                "name": {
-                    "type": "string"
-                },
-                "price": {
-                    "type": "number"
-                },
-                "restaurant_id": {
-                    "type": "string"
+                "count": {
+                    "type": "integer"
                 }
             }
         },
-        "reservation.MenuRes": {
+        "genprotos.CommentCReqOrCResOrGResOrURes": {
             "type": "object",
             "properties": {
-                "description": {
+                "body": {
                     "type": "string"
                 },
-                "id": {
+                "comment_id": {
                     "type": "string"
                 },
-                "name": {
-                    "type": "string"
-                },
-                "price": {
-                    "type": "number"
-                },
-                "restaurant": {
-                    "$ref": "#/definitions/reservation.Restaurant"
-                }
-            }
-        },
-        "reservation.Reservation": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "string"
-                },
-                "reservation_time": {
-                    "type": "string"
-                },
-                "restaurant_id": {
-                    "type": "string"
-                },
-                "status": {
+                "post_id": {
                     "type": "string"
                 },
                 "user_id": {
@@ -1386,47 +914,47 @@ const docTemplate = `{
                 }
             }
         },
-        "reservation.ReservationOrderRes": {
+        "genprotos.CommentGARes": {
             "type": "object",
             "properties": {
-                "id": {
-                    "type": "string"
+                "comments": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/genprotos.CommentCReqOrCResOrGResOrURes"
+                    }
                 },
-                "menu_item": {
-                    "$ref": "#/definitions/reservation.MenuRes"
-                },
-                "quantity": {
-                    "type": "string"
-                },
-                "reservation": {
-                    "$ref": "#/definitions/reservation.ReservationRes"
+                "count": {
+                    "type": "integer"
                 }
             }
         },
-        "reservation.ReservationOrderUpdate": {
+        "genprotos.CommentUReq": {
             "type": "object",
             "properties": {
-                "menu_item_id": {
+                "body": {
                     "type": "string"
                 },
-                "quantity": {
-                    "type": "string"
-                },
-                "reservation_id": {
+                "comment_id": {
                     "type": "string"
                 }
             }
         },
-        "reservation.ReservationReq": {
+        "genprotos.PostCReqOrCResOrGResOrUResp": {
             "type": "object",
             "properties": {
-                "reservation_time": {
+                "body": {
                     "type": "string"
                 },
-                "restaurant_id": {
+                "category_id": {
                     "type": "string"
                 },
-                "status": {
+                "post_id": {
+                    "type": "string"
+                },
+                "tags": {
+                    "type": "string"
+                },
+                "title": {
                     "type": "string"
                 },
                 "user_id": {
@@ -1434,73 +962,36 @@ const docTemplate = `{
                 }
             }
         },
-        "reservation.ReservationRes": {
+        "genprotos.PostGARes": {
             "type": "object",
             "properties": {
-                "id": {
-                    "type": "string"
+                "count": {
+                    "type": "integer"
                 },
-                "reservation_time": {
-                    "type": "string"
-                },
-                "restaurant": {
-                    "$ref": "#/definitions/reservation.Restaurant"
-                },
-                "status": {
-                    "type": "string"
-                },
-                "user": {
-                    "$ref": "#/definitions/reservation.UserResp"
+                "posts": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/genprotos.PostCReqOrCResOrGResOrUResp"
+                    }
                 }
             }
         },
-        "reservation.Restaurant": {
+        "genprotos.PostUReq": {
             "type": "object",
             "properties": {
-                "address": {
+                "body": {
                     "type": "string"
                 },
-                "description": {
+                "category_id": {
                     "type": "string"
                 },
-                "id": {
+                "post_id": {
                     "type": "string"
                 },
-                "name": {
+                "tags": {
                     "type": "string"
                 },
-                "phone_number": {
-                    "type": "string"
-                }
-            }
-        },
-        "reservation.RestaurantReq": {
-            "type": "object",
-            "properties": {
-                "address": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "phone_number": {
-                    "type": "string"
-                }
-            }
-        },
-        "reservation.UserResp": {
-            "type": "object",
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "username": {
+                "title": {
                     "type": "string"
                 }
             }

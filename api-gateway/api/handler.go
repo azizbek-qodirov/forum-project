@@ -17,53 +17,37 @@ import (
 // @securityDefinitions.apikey BearerAuth
 // @in header
 // @name Authorization
-func NewRouter(connR, connP *grpc.ClientConn, logger logger.Logger) *gin.Engine {
-	h := handlers.NewHandler(connR, connP, logger)
+func NewRouter(connF *grpc.ClientConn, logger logger.Logger) *gin.Engine {
+	h := handlers.NewHandler(connF, logger)
 	router := gin.Default()
 
 	router.GET("/api/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	protected := router.Group("/", middleware.JWTMiddleware())
 
-	// Reservation routes
-	reservation := protected.Group("/reservation")
-	reservation.POST("/", h.ReservationCreate)
-	reservation.GET("/:id", h.ReservationGet)
-	reservation.PUT("/:id", h.ReservationUpdate)
-	reservation.DELETE("/:id", h.ReservationDelete)
-	protected.GET("/reservations", h.ReservationGetAll)
-	reservation.POST("/reservations/check", h.ReservationCheck)
-	reservation.POST("/reservations/:id/order")
-	reservation.POST("/reservations/:id/payment")
+	// Category routes
+	category := protected.Group("/category")
+	category.POST("/", h.CategoryCreate)
+	category.GET("/:id", h.CategoryGet)
+	category.PUT("/:id", h.CategoryUpdate)
+	category.DELETE("/:id", h.CategoryDelete)
+	protected.GET("/categories", h.CategoryGetAll)
 
-	// Reservation-order routes
-	reservationOrder := protected.Group("/reservation_order")
-	reservationOrder.POST("/", h.ReservationOrderCreate)
-	reservationOrder.GET("/:id", h.ReservationOrderGet)
-	reservationOrder.PUT("/:id", h.ReservationOrderUpdate)
-	reservationOrder.DELETE("/:id", h.ReservationOrderDelete)
-	protected.GET("/reservation_orders", h.ReservationOrderGetAll)
+	// Post routes
+	post := protected.Group("/post")
+	post.POST("/", h.PostCreate)
+	post.GET("/:id", h.PostGet)
+	post.PUT("/:id", h.PostUpdate)
+	post.DELETE("/:id", h.PostDelete)
+	protected.GET("/posts", h.PostGetAll)
 
-	// Restaurant routes
-	restaurant := protected.Group("/restaurant")
-	restaurant.POST("/", h.RestaurantCreate)
-	restaurant.GET("/:id", h.RestaurantGet)
-	restaurant.PUT("/:id", h.RestaurantUpdate)
-	restaurant.DELETE("/:id", h.RestaurantDelete)
-	protected.GET("/restaurants", h.RestaurantGetAll)
-
-	// Menu routes
-	menu := protected.Group("/menu")
-	menu.POST("/", h.MenuCreate)
-	menu.GET("/:id", h.MenuGet)
-	menu.PUT("/:id", h.MenuUpdate)
-	menu.DELETE("/:id", h.MenuDelete)
-	protected.GET("/menus", h.MenuGetAll)
-
-	// Payment routes
-	payment := protected.Group("/payment")
-	payment.GET("/:id", h.GetPaymentByID)
-	payment.PUT("/:id", h.UpdatePayment)
+	// Comment routes
+	comment := protected.Group("/comment")
+	comment.POST("/", h.CommentCreate)
+	comment.GET("/:id", h.CommentGet)
+	comment.PUT("/:id", h.CommentUpdate)
+	comment.DELETE("/:id", h.CommentDelete)
+	protected.GET("/comments", h.CommentGetAll)
 
 	return router
 }

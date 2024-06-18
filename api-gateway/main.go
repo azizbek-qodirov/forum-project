@@ -23,14 +23,11 @@ func main() {
 	logger := logger.NewLogger(basepath, config.LOG_PATH) // Don't forget to change your log path
 	em := cf.NewErrorManager(logger)
 
-	ReserConn, err := grpc.NewClient(fmt.Sprintf("localhost%s", config.RESERVATION_SERVICE_PORT), grpc.WithTransportCredentials(insecure.NewCredentials()))
+	ForumConn, err := grpc.NewClient(fmt.Sprintf("localhost%s", config.FORUM_SERVICE_PORT), grpc.WithTransportCredentials(insecure.NewCredentials()))
 	em.CheckErr(err)
-	defer ReserConn.Close()
-	PaymentConn, err := grpc.NewClient(fmt.Sprintf("localhost%s", config.PAYMENT_SERVICE_PORT), grpc.WithTransportCredentials(insecure.NewCredentials()))
-	em.CheckErr(err)
-	defer PaymentConn.Close()
+	defer ForumConn.Close()
 
-	r := api.NewRouter(ReserConn, PaymentConn, *logger)
+	r := api.NewRouter(ForumConn, *logger)
 
 	fmt.Printf("Server started on port %s\n", config.HTTPPort)
 	logger.INFO.Println("Server started on port: " + config.HTTPPort)

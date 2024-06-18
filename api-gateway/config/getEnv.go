@@ -11,8 +11,7 @@ import (
 type Config struct {
 	HTTPPort string
 
-	RESERVATION_SERVICE_PORT string
-	PAYMENT_SERVICE_PORT     string
+	FORUM_SERVICE_PORT string
 
 	LOG_PATH string
 }
@@ -27,8 +26,7 @@ func Load() Config {
 	config.HTTPPort = cast.ToString(coalesce("HTTP_PORT", ":8080"))
 
 	config.LOG_PATH = cast.ToString(coalesce("LOG_PATH", "logs/info.log"))
-	config.RESERVATION_SERVICE_PORT = cast.ToString(coalesce("RESERVATION_SERVICE_PORT", ":50051"))
-	config.PAYMENT_SERVICE_PORT = cast.ToString(coalesce("PAYMENT_SERVICE_PORT", ":50052"))
+	config.FORUM_SERVICE_PORT = cast.ToString(coalesce("FORUM_SERVICE_PORT", ":50051"))
 
 	return config
 }

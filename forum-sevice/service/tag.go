@@ -17,7 +17,6 @@ func NewTagService(storage *st.Storage) *TagService {
 
 func (s *TagService) Create(ctx context.Context, tag *pb.TagCReqOrCRes) (*pb.TagCReqOrCRes, error) {
 	resp, err := s.storage.TagS.Create(tag)
-
 	if err != nil {
 		return nil, err
 	}

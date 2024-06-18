@@ -2,28 +2,25 @@ package handlers
 
 import (
 	"api-gateway/config/logger"
-	pbp "api-gateway/genproto/payment"
-	pbr "api-gateway/genproto/reservation"
+	pb "api-gateway/forum-protos/genprotos"
 
 	"google.golang.org/grpc"
 )
 
 type HTTPHandler struct {
-	Reservation      pbr.ReservationServiceClient
-	Restaurant       pbr.RestaurantServiceClient
-	Payment          pbp.PaymentServiceClient
-	Menu             pbr.MenuServiceClient
-	ReservationOrder pbr.ReservationOrderServiceClient
-	Logger           logger.Logger
+	Comment  pb.CommentServiceClient
+	Post     pb.PostServiceClient
+	Category pb.CategoryServiceClient
+	Tag      pb.TagServiceClient
+	Logger   logger.Logger
 }
 
-func NewHandler(connR, connP *grpc.ClientConn, l logger.Logger) *HTTPHandler {
+func NewHandler(connF *grpc.ClientConn, l logger.Logger) *HTTPHandler {
 	return &HTTPHandler{
-		Reservation:      pbr.NewReservationServiceClient(connR),
-		Restaurant:       pbr.NewRestaurantServiceClient(connR),
-		Payment:          pbp.NewPaymentServiceClient(connP),
-		Menu:             pbr.NewMenuServiceClient(connR),
-		ReservationOrder: pbr.NewReservationOrderServiceClient(connR),
-		Logger:           l,
+		Comment:  pb.NewCommentServiceClient(connF),
+		Post:     pb.NewPostServiceClient(connF),
+		Category: pb.NewCategoryServiceClient(connF),
+		Tag:      pb.NewTagServiceClient(connF),
+		Logger:   l,
 	}
 }

@@ -65,7 +65,6 @@ func ExtractClaim(tokenStr string) (jwt.MapClaims, error) {
 	if err != nil {
 		return nil, fmt.Errorf("parsing token: %w", err)
 	}
-	fmt.Print(token.Claims)
 	if !token.Valid {
 		return nil, errors.New("invalid token")
 	}

@@ -37,7 +37,7 @@ type CategoryI interface {
 
 type TagI interface {
 	Create(*pb.TagCReqOrCRes) (*pb.TagCReqOrCRes, error)
-	GetByID(*pb.TagGReqOrDReq) ([]*pb.TagCReqOrCRes, error)
+	GetByID(*pb.TagGReqOrDReq) (*pb.TagGAResOrPopularRes, error)
 	GetAll(*pb.TagGAReq) (*pb.TagGAResOrPopularRes, error)
 	Delete(*pb.TagGReqOrDReq) (*pb.Void, error)
 	Popular(*pb.Pagination) (*pb.TagGAResOrPopularRes, error)

@@ -1,334 +1,102 @@
 definitions:
-  payment.PaymentCreateReq:
+  genprotos.CategoryCReqOrCResOrGResOrUReqOrURes:
     properties:
-      amount:
-        type: number
-      payment_method:
-        type: string
-      payment_status:
-        type: string
-      reservation_id:
-        type: string
-    type: object
-  payment.PaymentGetByIdResp:
-    properties:
-      amount:
-        type: number
-      id:
-        type: string
-      payment_method:
-        type: string
-      payment_status:
-        type: string
-      reservation_id:
-        type: string
-    type: object
-  reservation.GetAllMenuRes:
-    properties:
-      menu:
-        items:
-          $ref: '#/definitions/reservation.MenuRes'
-        type: array
-    type: object
-  reservation.GetAllReservationOrderRes:
-    properties:
-      reservation_order:
-        items:
-          $ref: '#/definitions/reservation.ReservationOrderRes'
-        type: array
-    type: object
-  reservation.GetAllReservationRes:
-    properties:
-      reservation:
-        items:
-          $ref: '#/definitions/reservation.ReservationRes'
-        type: array
-    type: object
-  reservation.GetAllRestaurantRes:
-    properties:
-      restaurant:
-        items:
-          $ref: '#/definitions/reservation.Restaurant'
-        type: array
-    type: object
-  reservation.Menu:
-    properties:
-      description:
-        type: string
-      id:
+      category_id:
         type: string
       name:
         type: string
-      price:
-        type: number
-      restaurant_id:
-        type: string
     type: object
-  reservation.MenuReq:
+  genprotos.CategoryGARes:
     properties:
-      description:
-        type: string
-      name:
-        type: string
-      price:
-        type: number
-      restaurant_id:
-        type: string
+      categories:
+        items:
+          $ref: '#/definitions/genprotos.CategoryCReqOrCResOrGResOrUReqOrURes'
+        type: array
+      count:
+        type: integer
     type: object
-  reservation.MenuRes:
+  genprotos.CommentCReqOrCResOrGResOrURes:
     properties:
-      description:
+      body:
         type: string
-      id:
+      comment_id:
         type: string
-      name:
-        type: string
-      price:
-        type: number
-      restaurant:
-        $ref: '#/definitions/reservation.Restaurant'
-    type: object
-  reservation.Reservation:
-    properties:
-      id:
-        type: string
-      reservation_time:
-        type: string
-      restaurant_id:
-        type: string
-      status:
+      post_id:
         type: string
       user_id:
         type: string
     type: object
-  reservation.ReservationOrderRes:
+  genprotos.CommentGARes:
     properties:
-      id:
-        type: string
-      menu_item:
-        $ref: '#/definitions/reservation.MenuRes'
-      quantity:
-        type: string
-      reservation:
-        $ref: '#/definitions/reservation.ReservationRes'
+      comments:
+        items:
+          $ref: '#/definitions/genprotos.CommentCReqOrCResOrGResOrURes'
+        type: array
+      count:
+        type: integer
     type: object
-  reservation.ReservationOrderUpdate:
+  genprotos.CommentUReq:
     properties:
-      menu_item_id:
+      body:
         type: string
-      quantity:
-        type: string
-      reservation_id:
+      comment_id:
         type: string
     type: object
-  reservation.ReservationReq:
+  genprotos.PostCReqOrCResOrGResOrUResp:
     properties:
-      reservation_time:
+      body:
         type: string
-      restaurant_id:
+      category_id:
         type: string
-      status:
+      post_id:
+        type: string
+      tags:
+        type: string
+      title:
         type: string
       user_id:
         type: string
     type: object
-  reservation.ReservationRes:
+  genprotos.PostGARes:
     properties:
-      id:
-        type: string
-      reservation_time:
-        type: string
-      restaurant:
-        $ref: '#/definitions/reservation.Restaurant'
-      status:
-        type: string
-      user:
-        $ref: '#/definitions/reservation.UserResp'
+      count:
+        type: integer
+      posts:
+        items:
+          $ref: '#/definitions/genprotos.PostCReqOrCResOrGResOrUResp'
+        type: array
     type: object
-  reservation.Restaurant:
+  genprotos.PostUReq:
     properties:
-      address:
+      body:
         type: string
-      description:
+      category_id:
         type: string
-      id:
+      post_id:
         type: string
-      name:
+      tags:
         type: string
-      phone_number:
-        type: string
-    type: object
-  reservation.RestaurantReq:
-    properties:
-      address:
-        type: string
-      description:
-        type: string
-      name:
-        type: string
-      phone_number:
-        type: string
-    type: object
-  reservation.UserResp:
-    properties:
-      email:
-        type: string
-      id:
-        type: string
-      username:
+      title:
         type: string
     type: object
 info:
   contact: {}
 paths:
-  /menu:
-    post:
-      consumes:
-      - application/json
-      description: Create a new menu item
-      parameters:
-      - description: Menu data
-        in: body
-        name: menu
-        required: true
-        schema:
-          $ref: '#/definitions/reservation.MenuReq'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/reservation.Menu'
-        "400":
-          description: Invalid request payload
-          schema:
-            type: string
-        "500":
-          description: Server error
-          schema:
-            type: string
-      security:
-      - BearerAuth: []
-      summary: Create menu item
-      tags:
-      - menu
-  /menu/{id}:
-    delete:
-      consumes:
-      - application/json
-      description: Delete a menu item by ID
-      parameters:
-      - description: Menu ID
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Menu item deleted
-          schema:
-            type: string
-        "400":
-          description: Invalid menu item ID
-          schema:
-            type: string
-        "404":
-          description: Menu item not found
-          schema:
-            type: string
-        "500":
-          description: Server error
-          schema:
-            type: string
-      security:
-      - BearerAuth: []
-      summary: Delete menu item
-      tags:
-      - menu
+  /categories:
     get:
       consumes:
       - application/json
-      description: Get a menu item by ID
+      description: Get all categories
       parameters:
-      - description: Menu ID
-        in: path
-        name: id
-        required: true
+      - description: category_id
+        in: query
+        name: category_id
         type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/reservation.MenuRes'
-        "400":
-          description: Invalid menu item ID
-          schema:
-            type: string
-        "500":
-          description: Server error
-          schema:
-            type: string
-      security:
-      - BearerAuth: []
-      summary: Get menu item
-      tags:
-      - menu
-    put:
-      consumes:
-      - application/json
-      description: Update an existing menu item
-      parameters:
-      - description: Menu ID
-        in: path
-        name: id
-        required: true
-        type: string
-      - description: Updated menu item data
-        in: body
-        name: menu
-        required: true
-        schema:
-          $ref: '#/definitions/reservation.MenuReq'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/reservation.Menu'
-        "400":
-          description: Invalid request payload
-          schema:
-            type: string
-        "404":
-          description: Menu item not found
-          schema:
-            type: string
-        "500":
-          description: Server error
-          schema:
-            type: string
-      security:
-      - BearerAuth: []
-      summary: Update menu item
-      tags:
-      - menu
-  /menus:
-    get:
-      consumes:
-      - application/json
-      description: Get all menu items
-      parameters:
-      - description: Limit
+      - description: limit
         in: query
         name: limit
         type: integer
-      - description: Offset
+      - description: offset
         in: query
         name: offset
         type: integer
@@ -338,7 +106,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/reservation.GetAllMenuRes'
+            $ref: '#/definitions/genprotos.CategoryGARes'
         "400":
           description: Invalid parameters
           schema:
@@ -349,244 +117,28 @@ paths:
             type: string
       security:
       - BearerAuth: []
-      summary: Get all menu items
+      summary: Get all categories
       tags:
-      - menu
-  /payment/{id}:
-    get:
-      consumes:
-      - application/json
-      description: Get a payment by ID
-      parameters:
-      - description: Payment ID
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/payment.PaymentGetByIdResp'
-        "401":
-          description: Unauthorized
-          schema:
-            type: string
-        "404":
-          description: Payment not found
-          schema:
-            type: string
-        "500":
-          description: Server error
-          schema:
-            type: string
-      security:
-      - BearerAuth: []
-      summary: Get payment
-      tags:
-      - payment
-    put:
-      consumes:
-      - application/json
-      description: Update a payment by id
-      parameters:
-      - description: Payment ID
-        in: path
-        name: id
-        required: true
-        type: string
-      - description: Updated payment data
-        in: body
-        name: payment
-        required: true
-        schema:
-          $ref: '#/definitions/payment.PaymentCreateReq'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/payment.PaymentGetByIdResp'
-        "401":
-          description: Unauthorized
-          schema:
-            type: string
-        "404":
-          description: Payment not found
-          schema:
-            type: string
-        "500":
-          description: Server error
-          schema:
-            type: string
-      security:
-      - BearerAuth: []
-      summary: Update payment
-      tags:
-      - payment
-  /reservation:
+      - category
+  /category:
     post:
       consumes:
       - application/json
-      description: Create a new reservation
+      description: Create a new category
       parameters:
-      - description: Reservation data
+      - description: Category data
         in: body
-        name: reservation
+        name: category
         required: true
         schema:
-          $ref: '#/definitions/reservation.ReservationReq'
+          $ref: '#/definitions/genprotos.CategoryCReqOrCResOrGResOrUReqOrURes'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/reservation.Reservation'
-        "401":
-          description: Unauthorized
-          schema:
-            type: string
-        "500":
-          description: Server error
-          schema:
-            type: string
-      security:
-      - BearerAuth: []
-      summary: Create reservation
-      tags:
-      - reservation
-  /reservation/{id}:
-    delete:
-      consumes:
-      - application/json
-      description: Delete a reservation by ID
-      parameters:
-      - description: Reservation ID
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Reservation deleted
-          schema:
-            type: string
-        "401":
-          description: Unauthorized
-          schema:
-            type: string
-        "404":
-          description: Reservation not found
-          schema:
-            type: string
-        "500":
-          description: Server error
-          schema:
-            type: string
-      security:
-      - BearerAuth: []
-      summary: Delete reservation
-      tags:
-      - reservation
-    get:
-      consumes:
-      - application/json
-      description: Get a reservation by ID
-      parameters:
-      - description: Reservation ID
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/reservation.ReservationRes'
-        "401":
-          description: Unauthorized
-          schema:
-            type: string
-        "404":
-          description: Reservation not found
-          schema:
-            type: string
-        "500":
-          description: Server error
-          schema:
-            type: string
-      security:
-      - BearerAuth: []
-      summary: Get reservation
-      tags:
-      - reservation
-    put:
-      consumes:
-      - application/json
-      description: Update an existing reservation
-      parameters:
-      - description: Reservation ID
-        in: path
-        name: id
-        required: true
-        type: string
-      - description: Updated reservation data
-        in: body
-        name: reservation
-        required: true
-        schema:
-          $ref: '#/definitions/reservation.ReservationReq'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/reservation.ReservationReq'
-        "401":
-          description: Unauthorized
-          schema:
-            type: string
-        "404":
-          description: Reservation not found
-          schema:
-            type: string
-        "500":
-          description: Server error
-          schema:
-            type: string
-      security:
-      - BearerAuth: []
-      summary: Update reservation
-      tags:
-      - reservation
-  /reservation_order:
-    post:
-      consumes:
-      - application/json
-      description: Create a new reservation order
-      parameters:
-      - description: Reservation order data
-        in: body
-        name: reservation_order
-        required: true
-        schema:
-          $ref: '#/definitions/reservation.ReservationOrderUpdate'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/reservation.ReservationOrderRes'
+            $ref: '#/definitions/genprotos.CategoryCReqOrCResOrGResOrUReqOrURes'
         "400":
           description: Invalid request payload
           schema:
@@ -597,16 +149,16 @@ paths:
             type: string
       security:
       - BearerAuth: []
-      summary: Create reservation order
+      summary: Create category
       tags:
-      - reservation_order
-  /reservation_order/{id}:
+      - category
+  /category/{id}:
     delete:
       consumes:
       - application/json
-      description: Delete a reservation order by ID
+      description: Delete a category  by ID
       parameters:
-      - description: Reservation order ID
+      - description: Category ID
         in: path
         name: id
         required: true
@@ -615,15 +167,15 @@ paths:
       - application/json
       responses:
         "200":
-          description: Reservation order deleted
+          description: Category  deleted
           schema:
             type: string
         "400":
-          description: Invalid reservation order ID
+          description: Invalid category  ID
           schema:
             type: string
         "404":
-          description: Reservation order not found
+          description: Category  not found
           schema:
             type: string
         "500":
@@ -632,15 +184,15 @@ paths:
             type: string
       security:
       - BearerAuth: []
-      summary: Delete reservation order
+      summary: Delete category
       tags:
-      - reservation_order
+      - category
     get:
       consumes:
       - application/json
-      description: Get a reservation order by ID
+      description: Get a category by ID
       parameters:
-      - description: Reservation order ID
+      - description: Category ID
         in: path
         name: id
         required: true
@@ -651,9 +203,9 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/reservation.ReservationOrderRes'
+            $ref: '#/definitions/genprotos.CategoryCReqOrCResOrGResOrUReqOrURes'
         "400":
-          description: Invalid reservation order ID
+          description: Invalid category  ID
           schema:
             type: string
         "500":
@@ -662,38 +214,38 @@ paths:
             type: string
       security:
       - BearerAuth: []
-      summary: Get reservation order
+      summary: Get category
       tags:
-      - reservation_order
+      - category
     put:
       consumes:
       - application/json
-      description: Update an existing reservation order
+      description: Update an existing category
       parameters:
-      - description: Reservation order ID
+      - description: Category ID
         in: path
         name: id
         required: true
         type: string
-      - description: Updated reservation order data
+      - description: Updated category data
         in: body
-        name: reservation_order
+        name: category
         required: true
         schema:
-          $ref: '#/definitions/reservation.ReservationOrderUpdate'
+          $ref: '#/definitions/genprotos.CategoryCReqOrCResOrGResOrUReqOrURes'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/reservation.ReservationOrderUpdate'
+            $ref: '#/definitions/genprotos.CategoryCReqOrCResOrGResOrUReqOrURes'
         "400":
           description: Invalid request payload
           schema:
             type: string
         "404":
-          description: Reservation order not found
+          description: Category not found
           schema:
             type: string
         "500":
@@ -702,32 +254,30 @@ paths:
             type: string
       security:
       - BearerAuth: []
-      summary: Update reservation order
+      summary: Update category
       tags:
-      - reservation_order
-  /reservation_orders:
-    get:
+      - category
+  /comment:
+    post:
       consumes:
       - application/json
-      description: Get all reservation orders
+      description: Create a new comment
       parameters:
-      - description: Limit
-        in: query
-        name: limit
-        type: integer
-      - description: Offset
-        in: query
-        name: offset
-        type: integer
+      - description: Comment data
+        in: body
+        name: comment
+        required: true
+        schema:
+          $ref: '#/definitions/genprotos.CommentCReqOrCResOrGResOrURes'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/reservation.GetAllReservationOrderRes'
+            $ref: '#/definitions/genprotos.CommentCReqOrCResOrGResOrURes'
         "400":
-          description: Invalid parameters
+          description: Invalid request payload
           schema:
             type: string
         "500":
@@ -736,19 +286,128 @@ paths:
             type: string
       security:
       - BearerAuth: []
-      summary: Get all reservation orders
+      summary: Create comment
       tags:
-      - reservation_order
-  /reservations:
+      - comment
+  /comment/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a comment  by ID
+      parameters:
+      - description: Comment ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Comment  deleted
+          schema:
+            type: string
+        "400":
+          description: Invalid comment  ID
+          schema:
+            type: string
+        "404":
+          description: Comment  not found
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Delete comment
+      tags:
+      - comment
     get:
       consumes:
       - application/json
-      description: Get all reservations
+      description: Get a comment by ID
       parameters:
-      - description: User ID
+      - description: Comment ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/genprotos.CommentCReqOrCResOrGResOrURes'
+        "400":
+          description: Invalid comment  ID
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get comment
+      tags:
+      - comment
+    put:
+      consumes:
+      - application/json
+      description: Update an existing comment
+      parameters:
+      - description: Comment ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Updated comment data
+        in: body
+        name: comment
+        required: true
+        schema:
+          $ref: '#/definitions/genprotos.CommentUReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/genprotos.CommentCReqOrCResOrGResOrURes'
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "404":
+          description: Comment not found
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Update comment
+      tags:
+      - comment
+  /comments:
+    get:
+      consumes:
+      - application/json
+      description: Get all comments
+      parameters:
+      - description: user_id
         in: query
         name: user_id
         type: string
+      - description: post_id
+        in: query
+        name: post_id
+        type: string
       - description: Limit
         in: query
         name: limit
@@ -763,13 +422,9 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/reservation.GetAllReservationRes'
+            $ref: '#/definitions/genprotos.CommentGARes'
         "400":
           description: Invalid parameters
-          schema:
-            type: string
-        "401":
-          description: Unauthorized
           schema:
             type: string
         "500":
@@ -778,28 +433,28 @@ paths:
             type: string
       security:
       - BearerAuth: []
-      summary: Get all reservations
+      summary: Get all comments
       tags:
-      - reservation
-  /restaurant:
+      - comment
+  /post:
     post:
       consumes:
       - application/json
-      description: Create a new restaurant
+      description: Create a new post
       parameters:
-      - description: Restaurant data
+      - description: Post data
         in: body
-        name: restaurant
+        name: post
         required: true
         schema:
-          $ref: '#/definitions/reservation.RestaurantReq'
+          $ref: '#/definitions/genprotos.PostCReqOrCResOrGResOrUResp'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/reservation.Restaurant'
+            $ref: '#/definitions/genprotos.PostCReqOrCResOrGResOrUResp'
         "400":
           description: Invalid request payload
           schema:
@@ -810,16 +465,16 @@ paths:
             type: string
       security:
       - BearerAuth: []
-      summary: Create restaurant
+      summary: Create post
       tags:
-      - restaurant
-  /restaurant/{id}:
+      - post
+  /post/{id}:
     delete:
       consumes:
       - application/json
-      description: Delete a restaurant by ID
+      description: Delete a post  by ID
       parameters:
-      - description: Restaurant ID
+      - description: Post ID
         in: path
         name: id
         required: true
@@ -828,15 +483,15 @@ paths:
       - application/json
       responses:
         "200":
-          description: Restaurant deleted
+          description: Post  deleted
           schema:
             type: string
         "400":
-          description: Invalid restaurant ID
+          description: Invalid post  ID
           schema:
             type: string
         "404":
-          description: Restaurant not found
+          description: Post  not found
           schema:
             type: string
         "500":
@@ -845,15 +500,15 @@ paths:
             type: string
       security:
       - BearerAuth: []
-      summary: Delete restaurant
+      summary: Delete post
       tags:
-      - restaurant
+      - post
     get:
       consumes:
       - application/json
-      description: Get a restaurant by ID
+      description: Get a post by ID
       parameters:
-      - description: Restaurant ID
+      - description: Post ID
         in: path
         name: id
         required: true
@@ -864,9 +519,9 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/reservation.Restaurant'
+            $ref: '#/definitions/genprotos.PostCReqOrCResOrGResOrUResp'
         "400":
-          description: Invalid restaurant ID
+          description: Invalid post  ID
           schema:
             type: string
         "500":
@@ -875,38 +530,38 @@ paths:
             type: string
       security:
       - BearerAuth: []
-      summary: Get restaurant
+      summary: Get post
       tags:
-      - restaurant
+      - post
     put:
       consumes:
       - application/json
-      description: Update an existing restaurant
+      description: Update an existing post
       parameters:
-      - description: Restaurant ID
+      - description: Post ID
         in: path
         name: id
         required: true
         type: string
-      - description: Updated restaurant data
+      - description: Updated post data
         in: body
-        name: restaurant
+        name: post
         required: true
         schema:
-          $ref: '#/definitions/reservation.RestaurantReq'
+          $ref: '#/definitions/genprotos.PostUReq'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/reservation.RestaurantReq'
+            $ref: '#/definitions/genprotos.PostCReqOrCResOrGResOrUResp'
         "400":
           description: Invalid request payload
           schema:
             type: string
         "404":
-          description: Restaurant not found
+          description: Post not found
           schema:
             type: string
         "500":
@@ -915,20 +570,40 @@ paths:
             type: string
       security:
       - BearerAuth: []
-      summary: Update restaurant
+      summary: Update post
       tags:
-      - restaurant
-  /restaurants:
+      - post
+  /posts:
     get:
       consumes:
       - application/json
-      description: Get all restaurants
+      description: Get all posts
       parameters:
-      - description: Limit
+      - description: user_id
+        in: query
+        name: user_id
+        type: string
+      - description: category_id
+        in: query
+        name: category_id
+        type: string
+      - description: title
+        in: query
+        name: title
+        type: string
+      - description: body
+        in: query
+        name: body
+        type: string
+      - description: tags
+        in: query
+        name: tags
+        type: string
+      - description: limit
         in: query
         name: limit
         type: integer
-      - description: Offset
+      - description: offset
         in: query
         name: offset
         type: integer
@@ -938,7 +613,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/reservation.GetAllRestaurantRes'
+            $ref: '#/definitions/genprotos.PostGARes'
         "400":
           description: Invalid parameters
           schema:
@@ -949,9 +624,9 @@ paths:
             type: string
       security:
       - BearerAuth: []
-      summary: Get all restaurants
+      summary: Get all posts
       tags:
-      - restaurant
+      - post
 securityDefinitions:
   BearerAuth:
     in: header

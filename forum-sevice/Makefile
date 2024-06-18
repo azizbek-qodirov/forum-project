@@ -31,7 +31,7 @@ lint: ## Run golangci-lint with printing to stdout
 	golangci-lint -c .golangci.yaml run --build-tags "musl" ./...
 
 swag-gen:
-	~/go/bin/swag init -g ./api/router.go -o api/docs force 1
+	~/go/bin/swag init -g ./api/handler.go -o api/docs force 1
 
 # protoc --go_out=forum-protos/ \
 # --go-grpc_out=forum-protos/ \

@@ -4,6 +4,8 @@ import (
 	"context"
 	pb "forum-service/forum-protos/genprotos"
 	st "forum-service/storage"
+
+	"github.com/google/uuid"
 )
 
 type CategoryService struct {
@@ -15,8 +17,9 @@ func NewCategoryService(storage *st.Storage) *CategoryService {
 	return &CategoryService{storage: *storage}
 }
 
-func (s *CategoryService) Create(ctx context.Context, order *pb.CategoryCReqOrCResOrGResOrUReqOrURes) (*pb.CategoryCReqOrCResOrGResOrUReqOrURes, error) {
-	resp, err := s.storage.CategoryS.Create(order)
+func (s *CategoryService) Create(ctx context.Context, category *pb.CategoryCReqOrCResOrGResOrUReqOrURes) (*pb.CategoryCReqOrCResOrGResOrUReqOrURes, error) {
+	category.CategoryId = uuid.NewString()
+	resp, err := s.storage.CategoryS.Create(category)
 
 	if err != nil {
 		return nil, err
@@ -35,9 +38,8 @@ func (s *CategoryService) GetByID(ctx context.Context, idReq *pb.CategoryGReqOrD
 	return resp, nil
 }
 
-func (s *CategoryService) GetAll(ctx context.Context, allOrders *pb.CategoryGAReq) (*pb.CategoryGARes, error) {
-	orders, err := s.storage.CategoryS.GetAll(allOrders)
-
+func (s *CategoryService) GetAll(ctx context.Context, allCategories *pb.CategoryGAReq) (*pb.CategoryGARes, error) {
+	orders, err := s.storage.CategoryS.GetAll(allCategories)
 	if err != nil {
 		return nil, err
 	}
@@ -45,8 +47,8 @@ func (s *CategoryService) GetAll(ctx context.Context, allOrders *pb.CategoryGARe
 	return orders, nil
 }
 
-func (s *CategoryService) Update(ctx context.Context, reservation *pb.CategoryCReqOrCResOrGResOrUReqOrURes) (*pb.CategoryCReqOrCResOrGResOrUReqOrURes, error) {
-	resp, err := s.storage.CategoryS.Update(reservation)
+func (s *CategoryService) Update(ctx context.Context, category *pb.CategoryCReqOrCResOrGResOrUReqOrURes) (*pb.CategoryCReqOrCResOrGResOrUReqOrURes, error) {
+	resp, err := s.storage.CategoryS.Update(category)
 
 	if err != nil {
 		return nil, err

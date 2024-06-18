@@ -58,7 +58,29 @@ func (m *CommentManager) Delete(req *pb.CommentGReqOrDReq) (*pb.Void, error) {
 
 func (m *CommentManager) GetAll(req *pb.CommentGAReq) (*pb.CommentGARes, error) {
 	query := "SELECT comment_id, user_id, post_id, body FROM comments WHERE deleted_at = 0"
-	rows, err := m.Conn.Query(query)
+	var args []interface{}
+	paramIndex := 1
+	if req.Filter.PostId != "" {
+		query += fmt.Sprintf(" AND post_id = $%d", paramIndex)
+		args = append(args, req.Filter.PostId)
+		paramIndex++
+	}
+	if req.Filter.UserId != "" {
+		query += fmt.Sprintf(" AND user_id = $%d", paramIndex)
+		args = append(args, req.Filter.UserId)
+		paramIndex++
+	}
+	if req.Pagination.Limit != 0 {
+		query += fmt.Sprintf(" LIMIT $%d", paramIndex)
+		args = append(args, req.Pagination.Limit)
+		paramIndex++
+	}
+	if req.Pagination.Offset != 0 {
+		query += fmt.Sprintf(" OFFSET $%d", paramIndex)
+		args = append(args, req.Pagination.Offset)
+		paramIndex++
+	}
+	rows, err := m.Conn.Query(query, args...)
 	if err != nil {
 		return nil, err
 	}

@@ -4,6 +4,8 @@ import (
 	"context"
 	pb "forum-service/forum-protos/genprotos"
 	st "forum-service/storage"
+
+	"github.com/google/uuid"
 )
 
 type CommentService struct {
@@ -16,6 +18,7 @@ func NewCommentService(storage *st.Storage) *CommentService {
 }
 
 func (s *CommentService) Create(ctx context.Context, comment *pb.CommentCReqOrCResOrGResOrURes) (*pb.CommentCReqOrCResOrGResOrURes, error) {
+	comment.CommentId = uuid.NewString()
 	resp, err := s.storage.CommentS.Create(comment)
 
 	if err != nil {
@@ -45,8 +48,8 @@ func (s *CommentService) GetAll(ctx context.Context, allComments *pb.CommentGARe
 	return comments, nil
 }
 
-func (s *CommentService) Update(ctx context.Context, reservation *pb.CommentUReq) (*pb.CommentCReqOrCResOrGResOrURes, error) {
-	resp, err := s.storage.CommentS.Update(reservation)
+func (s *CommentService) Update(ctx context.Context, comment *pb.CommentUReq) (*pb.CommentCReqOrCResOrGResOrURes, error) {
+	resp, err := s.storage.CommentS.Update(comment)
 
 	if err != nil {
 		return nil, err

@@ -23,7 +23,7 @@ func (m *TagManager) Create(tag *pb.TagCReqOrCRes) (*pb.TagCReqOrCRes, error) {
 	return t, nil
 }
 
-func (m *TagManager) GetByID(req *pb.TagGReqOrDReq) ([]*pb.TagCReqOrCRes, error) {
+func (m *TagManager) GetByID(req *pb.TagGReqOrDReq) (*pb.TagGAResOrPopularRes, error) {
 	query := "SELECT tag, post_id FROM tags WHERE post_id = $1"
 	rows, err := m.Conn.Query(query, req.PostId)
 	if err != nil {
@@ -31,13 +31,13 @@ func (m *TagManager) GetByID(req *pb.TagGReqOrDReq) ([]*pb.TagCReqOrCRes, error)
 	}
 	defer rows.Close()
 
-	tags := []*pb.TagCReqOrCRes{}
+	tags := &pb.TagGAResOrPopularRes{}
 	for rows.Next() {
 		t := &pb.TagCReqOrCRes{}
 		if err := rows.Scan(&t.Tag, &t.PostId); err != nil {
 			return nil, err
 		}
-		tags = append(tags, t)
+		tags.Tags = append(tags.Tags, t)
 	}
 	if err = rows.Err(); err != nil {
 		return nil, err

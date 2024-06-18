@@ -35,7 +35,7 @@ func (m *CategoryManager) Update(category *pb.CategoryCReqOrCResOrGResOrUReqOrUR
 }
 
 func (m *CategoryManager) GetByID(req *pb.CategoryGReqOrDReq) (*pb.CategoryCReqOrCResOrGResOrUReqOrURes, error) {
-	query := "SELECT category_id, name FROM categories WHERE category_id = $1"
+	query := "SELECT category_id, name FROM categories WHERE category_id = $1 AND deleted_at = 0"
 	cat := &pb.CategoryCReqOrCResOrGResOrUReqOrURes{}
 	err := m.Conn.QueryRow(query, req.CategoryId).Scan(&cat.CategoryId, &cat.Name)
 	if err != nil {
@@ -57,8 +57,26 @@ func (m *CategoryManager) Delete(req *pb.CategoryGReqOrDReq) (*pb.Void, error) {
 }
 
 func (m *CategoryManager) GetAll(req *pb.CategoryGAReq) (*pb.CategoryGARes, error) {
-	query := "SELECT category_id, name FROM categories"
-	rows, err := m.Conn.Query(query)
+	query := "SELECT category_id, name FROM categories WHERE deleted_at = 0"
+	var args []interface{}
+	var paramInex = 1
+	if req.Filter.CategoryId != "" {
+		query += fmt.Sprintf(" AND category_id = $%d", paramInex)
+		args = append(args, req.Filter.CategoryId)
+		paramInex++
+
+	}
+	if req.Pagination.Limit != 0 {
+		query += fmt.Sprintf(" LIMIT $%d", paramInex)
+		args = append(args, req.Pagination.Limit)
+		paramInex++
+	}
+	if req.Pagination.Offset != 0 {
+		query += fmt.Sprintf(" OFFSET $%d", paramInex)
+		args = append(args, req.Pagination.Offset)
+		paramInex++
+	}
+	rows, err := m.Conn.Query(query, args...)
 	if err != nil {
 		return nil, err
 	}
