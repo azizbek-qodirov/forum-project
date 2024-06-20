@@ -100,7 +100,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/genprotos.CategoryCReqOrCResOrGResOrUReqOrURes"
+                            "$ref": "#/definitions/genprotos.CategoryCReqForSwagger"
                         }
                     }
                 ],
@@ -205,7 +205,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/genprotos.CategoryCReqOrCResOrGResOrUReqOrURes"
+                            "$ref": "#/definitions/genprotos.CategoryCReqForSwagger"
                         }
                     }
                 ],
@@ -315,7 +315,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/genprotos.CommentCReqOrCResOrGResOrURes"
+                            "$ref": "#/definitions/genprotos.CommentCReqForSwagger"
                         }
                     }
                 ],
@@ -420,7 +420,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/genprotos.CommentUReq"
+                            "$ref": "#/definitions/genprotos.CommentCReqForSwagger"
                         }
                     }
                 ],
@@ -571,6 +571,60 @@ const docTemplate = `{
                 }
             }
         },
+        "/popular-tags": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Gets popular tags",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tag"
+                ],
+                "summary": "Get Popular tags",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "offset",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/genprotos.TagGAResOrPopularRes"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid tag  ID",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/post": {
             "post": {
                 "security": [
@@ -596,7 +650,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/genprotos.PostCReqOrCResOrGResOrUResp"
+                            "$ref": "#/definitions/genprotos.PostCReqForSwagger"
                         }
                     }
                 ],
@@ -701,7 +755,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/genprotos.PostUReq"
+                            "$ref": "#/definitions/genprotos.PostCReqForSwagger"
                         }
                     }
                 ],
@@ -872,6 +926,14 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "genprotos.CategoryCReqForSwagger": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
         "genprotos.CategoryCReqOrCResOrGResOrUReqOrURes": {
             "type": "object",
             "properties": {
@@ -894,6 +956,17 @@ const docTemplate = `{
                 },
                 "count": {
                     "type": "integer"
+                }
+            }
+        },
+        "genprotos.CommentCReqForSwagger": {
+            "type": "object",
+            "properties": {
+                "body": {
+                    "type": "string"
+                },
+                "post_id": {
+                    "type": "string"
                 }
             }
         },
@@ -928,13 +1001,19 @@ const docTemplate = `{
                 }
             }
         },
-        "genprotos.CommentUReq": {
+        "genprotos.PostCReqForSwagger": {
             "type": "object",
             "properties": {
                 "body": {
                     "type": "string"
                 },
-                "comment_id": {
+                "category_id": {
+                    "type": "string"
+                },
+                "tags": {
+                    "type": "string"
+                },
+                "title": {
                     "type": "string"
                 }
             }
@@ -976,23 +1055,25 @@ const docTemplate = `{
                 }
             }
         },
-        "genprotos.PostUReq": {
+        "genprotos.TagCReqOrCRes": {
             "type": "object",
             "properties": {
-                "body": {
-                    "type": "string"
-                },
-                "category_id": {
-                    "type": "string"
-                },
                 "post_id": {
                     "type": "string"
                 },
+                "tag": {
+                    "type": "string"
+                }
+            }
+        },
+        "genprotos.TagGAResOrPopularRes": {
+            "type": "object",
+            "properties": {
                 "tags": {
-                    "type": "string"
-                },
-                "title": {
-                    "type": "string"
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/genprotos.TagCReqOrCRes"
+                    }
                 }
             }
         }

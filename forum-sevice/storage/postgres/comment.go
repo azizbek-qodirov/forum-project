@@ -37,7 +37,7 @@ func (m *CommentManager) Update(comment *pb.CommentUReq) (*pb.CommentCReqOrCResO
 func (m *CommentManager) GetByID(req *pb.CommentGReqOrDReq) (*pb.CommentCReqOrCResOrGResOrURes, error) {
 	query := "SELECT comment_id, user_id, post_id, body FROM comments WHERE comment_id = $1"
 	com := &pb.CommentCReqOrCResOrGResOrURes{}
-	err := m.Conn.QueryRow(query, req.PostId).Scan(&com.CommentId, &com.UserId, &com.PostId, &com.Body)
+	err := m.Conn.QueryRow(query, req.CommentId).Scan(&com.CommentId, &com.UserId, &com.PostId, &com.Body)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, fmt.Errorf("comment not found")
@@ -47,9 +47,18 @@ func (m *CommentManager) GetByID(req *pb.CommentGReqOrDReq) (*pb.CommentCReqOrCR
 	return com, nil
 }
 
-func (m *CommentManager) Delete(req *pb.CommentGReqOrDReq) (*pb.Void, error) {
+func (m *CommentManager) DeleteByPostID(tx *sql.Tx, req *pb.CommentGReqOrDReqByPostID) (*pb.Void, error) {
+	query := "UPDATE comments SET deleted_at = EXTRACT(EPOCH FROM NOW()) WHERE post_id = $1"
+	_, err := tx.Exec(query, req.PostId)
+	if err != nil {
+		return nil, err
+	}
+	return nil, nil
+}
+
+func (m *CommentManager) Delete(tx *sql.Tx, req *pb.CommentGReqOrDReq) (*pb.Void, error) {
 	query := "UPDATE comments SET deleted_at = EXTRACT(EPOCH FROM NOW()) WHERE comment_id = $1"
-	_, err := m.Conn.Exec(query, req.PostId)
+	_, err := tx.Exec(query, req.CommentId)
 	if err != nil {
 		return nil, err
 	}

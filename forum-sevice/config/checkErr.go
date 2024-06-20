@@ -1,19 +1,17 @@
 package config
 
 import (
-	"forum-service/config/logger"
+	"log"
 )
 
-type ErrorManager struct {
-	logger *logger.Logger
-}
+type ErrorManager struct{}
 
-func NewErrorManager(logger *logger.Logger) *ErrorManager {
-	return &ErrorManager{logger: logger}
+func NewErrorManager() *ErrorManager {
+	return &ErrorManager{}
 }
 
 func (e *ErrorManager) CheckErr(err error) {
 	if err != nil {
-		e.logger.ERROR.Panic(err.Error())
+		log.Fatal(err.Error())
 	}
 }

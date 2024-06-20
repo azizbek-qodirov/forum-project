@@ -9,6 +9,7 @@ import (
 	pb "api-gateway/forum-protos/genprotos"
 
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt"
 )
 
 // PostCreate handles the creation of a new post.
@@ -17,7 +18,7 @@ import (
 // @Tags post
 // @Accept json
 // @Produce json
-// @Param post body pb.PostCReqOrCResOrGResOrUResp true "Post data"
+// @Param post body pb.PostCReqForSwagger true "Post data"
 // @Success 200 {object} pb.PostCReqOrCResOrGResOrUResp
 // @Failure 400 {object} string "Invalid request payload"
 // @Failure 500 {object} string "Server error"
@@ -29,7 +30,14 @@ func (h *HTTPHandler) PostCreate(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request payload"})
 		return
 	}
+	claims, exists := c.Get("claims")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		return
+	}
 
+	user_id := claims.(jwt.MapClaims)["user_id"].(string)
+	req.UserId = user_id
 	res, err := h.Post.Create(c, &req)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -67,7 +75,7 @@ func (h *HTTPHandler) PostGet(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param id path string true "Post ID"
-// @Param post body pb.PostUReq true "Updated post data"
+// @Param post body pb.PostCReqForSwagger true "Updated post data"
 // @Success 200 {object} pb.PostCReqOrCResOrGResOrUResp
 // @Failure 400 {object} string "Invalid request payload"
 // @Failure 404 {object} string "Post not found"

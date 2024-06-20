@@ -1,0 +1,42 @@
+[
+{
+    "--": "POST CREATE",
+    "body": "My Ubuntu is not working, there's only black screen and it's not turning on! Can anybody help, please?",
+    "category_id": "03875bad-deba-4cd5-a5d1-38b1f2ab5225",
+    "tags": "#bugs #linux #ubuntu #help",
+    "title": "I have a linux bug"
+},
+{
+    "--": "POST CREATE",
+    "body": "Everyone tell a joke?",
+    "category_id": "0c236e06-0bc9-4028-952f-b262738596d8",
+    "tags": "#jokes #open #funny #offtopic",
+    "title": "Do you know a joke?"
+},
+{
+    "--": "POST CREATE",
+    "body": "Anybody here knows how to open a door?",
+    "category_id": "8f43be79-4b0d-42c8-aaad-829ebce518cb",
+    "tags": "#howto",
+    "title": "How to open a door?"
+},
+{
+    "--": "POST UPDATE",
+    "body": "Does anybody here know how to open a door?",
+    "category_id": "8f43be79-4b0d-42c8-aaad-829ebce518cb",
+    "post_id": "string",
+    "tags": "#howto #funny #jokes #offtopic",
+    "title": "How to open a door?"
+},
+
+
+{
+    "--": "COMMENT CREATE",
+    "body": "Try to restart your computer.",
+    "post_id": "*****"
+},
+{
+    "body": "Just restart your computer, it must help.",
+    "post_id": "*****"
+}
+]

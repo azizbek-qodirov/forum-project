@@ -8,27 +8,74 @@ import (
 )
 
 type PostManager struct {
-	Conn *sql.DB
+	Conn           *sql.DB
+	TagManager     *TagManager
+	CommentManager *CommentManager
 }
 
-func NewPostManager(conn *sql.DB) *PostManager {
-	return &PostManager{Conn: conn}
+func NewPostManager(conn *sql.DB, tagManager *TagManager, commentManager *CommentManager) *PostManager {
+	return &PostManager{Conn: conn, TagManager: tagManager, CommentManager: commentManager}
 }
 
-func (m *PostManager) Create(post *pb.PostCReqOrCResOrGResOrUResp) (*pb.PostCReqOrCResOrGResOrUResp, error) {
+func (m *PostManager) Create(post *pb.PostCReqOrCResOrGResOrUResp, tags []string) (*pb.PostCReqOrCResOrGResOrUResp, error) {
+	tx, err := m.Conn.Begin()
+	if err != nil {
+		return nil, err
+	}
 	query := "INSERT INTO posts (post_id, user_id, title, body, category_id, tags) VALUES ($1, $2, $3, $4, $5, $6) RETURNING post_id, user_id, title, body, category_id, tags"
 	p := &pb.PostCReqOrCResOrGResOrUResp{}
-	err := m.Conn.QueryRow(query, post.PostId, post.UserId, post.Title, post.Body, post.CategoryId, post.Tags).Scan(&p.PostId, &p.UserId, &p.Title, &p.Body, &p.CategoryId, &p.Tags)
+	err = tx.QueryRow(query, post.PostId, post.UserId, post.Title, post.Body, post.CategoryId, post.Tags).Scan(&p.PostId, &p.UserId, &p.Title, &p.Body, &p.CategoryId, &p.Tags)
+	if err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+	for _, tag := range tags {
+		newTag := &pb.TagCReqOrCRes{
+			Tag:    tag,
+			PostId: post.PostId,
+		}
+		_, err := m.TagManager.Create(tx, newTag)
+		if err != nil {
+			tx.Rollback()
+			return nil, err
+		}
+	}
+	err = tx.Commit()
 	if err != nil {
 		return nil, err
 	}
 	return p, nil
 }
 
-func (m *PostManager) Update(post *pb.PostUReq) (*pb.PostCReqOrCResOrGResOrUResp, error) {
+func (m *PostManager) Update(post *pb.PostUReq, tags []string) (*pb.PostCReqOrCResOrGResOrUResp, error) {
+	tx, err := m.Conn.Begin()
+	if err != nil {
+		return nil, err
+	}
+	_, err = m.TagManager.Delete(tx, &pb.TagGReqOrDReq{PostId: post.PostId})
+	if err != nil {
+		tx.Rollback()
+		return nil, err
+	}
 	query := "UPDATE posts SET title = $1, body = $2, category_id = $3, tags = $4, updated_at = NOW() WHERE post_id = $5 RETURNING post_id, user_id, title, body, category_id, tags"
 	p := &pb.PostCReqOrCResOrGResOrUResp{}
-	err := m.Conn.QueryRow(query, post.Title, post.Body, post.CategoryId, post.Tags, post.PostId).Scan(&p.PostId, &p.UserId, &p.Title, &p.Body, &p.CategoryId, &p.Tags)
+	err = tx.QueryRow(query, post.Title, post.Body, post.CategoryId, post.Tags, post.PostId).Scan(&p.PostId, &p.UserId, &p.Title, &p.Body, &p.CategoryId, &p.Tags)
+	if err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+	for _, tag := range tags {
+		newTag := &pb.TagCReqOrCRes{
+			Tag:    tag,
+			PostId: post.PostId,
+		}
+		_, err := m.TagManager.Create(tx, newTag)
+		if err != nil {
+			tx.Rollback()
+			return nil, err
+		}
+	}
+	err = tx.Commit()
 	if err != nil {
 		return nil, err
 	}
@@ -49,8 +96,22 @@ func (m *PostManager) GetByID(req *pb.PostGReqOrDReq) (*pb.PostCReqOrCResOrGResO
 }
 
 func (m *PostManager) Delete(req *pb.PostGReqOrDReq) (*pb.Void, error) {
+	tx, err := m.Conn.Begin()
+	if err != nil {
+		return nil, err
+	}
 	query := "UPDATE posts SET deleted_at = EXTRACT(EPOCH FROM NOW()) WHERE post_id = $1"
-	_, err := m.Conn.Exec(query, req.PostId)
+	_, err = tx.Exec(query, req.PostId)
+	if err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+	_, err = m.CommentManager.DeleteByPostID(tx, &pb.CommentGReqOrDReqByPostID{PostId: req.PostId})
+	if err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+	err = tx.Commit()
 	if err != nil {
 		return nil, err
 	}

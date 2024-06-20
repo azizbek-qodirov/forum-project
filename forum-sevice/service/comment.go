@@ -59,7 +59,19 @@ func (s *CommentService) Update(ctx context.Context, comment *pb.CommentUReq) (*
 }
 
 func (s *CommentService) Delete(ctx context.Context, idReq *pb.CommentGReqOrDReq) (*pb.Void, error) {
-	_, err := s.storage.CommentS.Delete(idReq)
-
-	return nil, err
+	tx, err := s.storage.Db.Begin()
+	if err != nil {
+		return nil, err
+	}
+	_, err = s.storage.CommentS.Delete(tx, idReq)
+	if err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+	err = tx.Commit()
+	if err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+	return &pb.Void{}, nil
 }

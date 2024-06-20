@@ -9,6 +9,7 @@ import (
 	pb "api-gateway/forum-protos/genprotos"
 
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt"
 )
 
 // CommentCreate handles the creation of a new comment.
@@ -17,7 +18,7 @@ import (
 // @Tags comment
 // @Accept json
 // @Produce json
-// @Param comment body pb.CommentCReqOrCResOrGResOrURes true "Comment data"
+// @Param comment body pb.CommentCReqForSwagger true "Comment data"
 // @Success 200 {object} pb.CommentCReqOrCResOrGResOrURes
 // @Failure 400 {object} string "Invalid request payload"
 // @Failure 500 {object} string "Server error"
@@ -29,7 +30,14 @@ func (h *HTTPHandler) CommentCreate(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request payload"})
 		return
 	}
+	claims, exists := c.Get("claims")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		return
+	}
 
+	user_id := claims.(jwt.MapClaims)["user_id"].(string)
+	req.UserId = user_id
 	res, err := h.Comment.Create(c, &req)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -51,7 +59,7 @@ func (h *HTTPHandler) CommentCreate(c *gin.Context) {
 // @Security BearerAuth
 // @Router /comment/{id} [get]
 func (h *HTTPHandler) CommentGet(c *gin.Context) {
-	id := &pb.CommentGReqOrDReq{PostId: c.Param("id")}
+	id := &pb.CommentGReqOrDReq{CommentId: c.Param("id")}
 	res, err := h.Comment.GetByID(c, id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Couldn't get comment", "details": err.Error()})
@@ -67,7 +75,7 @@ func (h *HTTPHandler) CommentGet(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param id path string true "Comment ID"
-// @Param comment body pb.CommentUReq true "Updated comment data"
+// @Param comment body pb.CommentCReqForSwagger true "Updated comment data"
 // @Success 200 {object} pb.CommentCReqOrCResOrGResOrURes
 // @Failure 400 {object} string "Invalid request payload"
 // @Failure 404 {object} string "Comment not found"
@@ -106,7 +114,7 @@ func (h *HTTPHandler) CommentUpdate(c *gin.Context) {
 // @Security BearerAuth
 // @Router /comment/{id} [delete]
 func (h *HTTPHandler) CommentDelete(c *gin.Context) {
-	id := &pb.CommentGReqOrDReq{PostId: c.Param("id")}
+	id := &pb.CommentGReqOrDReq{CommentId: c.Param("id")}
 	_, err := h.Comment.Delete(c, id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Couldn't delete comment ", "details": err.Error()})

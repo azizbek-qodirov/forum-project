@@ -3,11 +3,8 @@ package main
 import (
 	"log"
 	"net"
-	"path/filepath"
-	"runtime"
 
 	cf "forum-service/config"
-	"forum-service/config/logger"
 	"forum-service/storage"
 
 	pb "forum-service/forum-protos/genprotos"
@@ -16,16 +13,10 @@ import (
 	"google.golang.org/grpc"
 )
 
-var (
-	_, b, _, _ = runtime.Caller(0)
-	basepath   = filepath.Dir(b)
-)
-
 func main() {
 	config := cf.Load()
-	logger := logger.NewLogger(basepath, config.LOG_PATH) // Don't forget to change your log path
-	em := cf.NewErrorManager(logger)
-	db, err := storage.NewPostgresStorage(config, logger)
+	em := cf.NewErrorManager()
+	db, err := storage.NewPostgresStorage(config)
 	em.CheckErr(err)
 	defer db.Db.Close()
 

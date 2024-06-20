@@ -4,6 +4,7 @@ import (
 	"context"
 	pb "forum-service/forum-protos/genprotos"
 	st "forum-service/storage"
+	"regexp"
 )
 
 type TagService struct {
@@ -15,37 +16,26 @@ func NewTagService(storage *st.Storage) *TagService {
 	return &TagService{storage: *storage}
 }
 
-func (s *TagService) Create(ctx context.Context, tag *pb.TagCReqOrCRes) (*pb.TagCReqOrCRes, error) {
-	resp, err := s.storage.TagS.Create(tag)
-	if err != nil {
-		return nil, err
-	}
-
-	return resp, nil
+func (s *TagService) GetPopular(ctx context.Context, req *pb.Pagination) (*pb.TagPopularRes, error) {
+	return s.storage.TagS.GetPopular(req)
 }
 
-func (s *TagService) GetByID(ctx context.Context, idReq *pb.TagGReqOrDReq) (*pb.TagGAResOrPopularRes, error) {
-	resp, err := s.storage.TagS.GetByID(idReq)
+func ValidateTags(tags string) (bool, []string) {
+	re := regexp.MustCompile(`^(#\w+(\s*,?\s*#\w+)*)$`)
 
-	if err != nil {
-		return nil, err
+	if re.MatchString(tags) {
+		splitTags := regexp.MustCompile(`[,\s]+`).Split(tags, -1)
+		uniqueTagsMap := make(map[string]bool)
+		var result []string
+
+		for _, tag := range splitTags {
+			if !uniqueTagsMap[tag] {
+				uniqueTagsMap[tag] = true
+				result = append(result, tag)
+			}
+		}
+
+		return true, result
 	}
-
-	return resp, nil
-}
-
-func (s *TagService) GetAll(ctx context.Context, allTags *pb.TagGAReq) (*pb.TagGAResOrPopularRes, error) {
-	tags, err := s.storage.TagS.GetAll(allTags)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return tags, nil
-}
-
-func (s *TagService) Delete(ctx context.Context, idReq *pb.TagGReqOrDReq) (*pb.Void, error) {
-	_, err := s.storage.TagS.Delete(idReq)
-
-	return nil, err
+	return false, nil
 }

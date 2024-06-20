@@ -15,7 +15,7 @@ import (
 // @Tags category
 // @Accept json
 // @Produce json
-// @Param category body pb.CategoryCReqOrCResOrGResOrUReqOrURes true "Category data"
+// @Param category body pb.CategoryCReqForSwagger true "Category data"
 // @Success 200 {object} pb.CategoryCReqOrCResOrGResOrUReqOrURes
 // @Failure 400 {object} string "Invalid request payload"
 // @Failure 500 {object} string "Server error"
@@ -65,7 +65,7 @@ func (h *HTTPHandler) CategoryGet(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param id path string true "Category ID"
-// @Param category body pb.CategoryCReqOrCResOrGResOrUReqOrURes true "Updated category data"
+// @Param category body pb.CategoryCReqForSwagger true "Updated category data"
 // @Success 200 {object} pb.CategoryCReqOrCResOrGResOrUReqOrURes
 // @Failure 400 {object} string "Invalid request payload"
 // @Failure 404 {object} string "Category not found"

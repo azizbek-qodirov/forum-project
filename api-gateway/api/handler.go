@@ -49,5 +49,8 @@ func NewRouter(connF *grpc.ClientConn, logger logger.Logger) *gin.Engine {
 	comment.DELETE("/:id", h.CommentDelete)
 	protected.GET("/comments", h.CommentGetAll)
 
+	// Tag routes
+	protected.GET("/popular-tags", h.PopularTagsGet)
+
 	return router
 }

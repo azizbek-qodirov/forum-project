@@ -1,4 +1,9 @@
 definitions:
+  genprotos.CategoryCReqForSwagger:
+    properties:
+      name:
+        type: string
+    type: object
   genprotos.CategoryCReqOrCResOrGResOrUReqOrURes:
     properties:
       category_id:
@@ -14,6 +19,13 @@ definitions:
         type: array
       count:
         type: integer
+    type: object
+  genprotos.CommentCReqForSwagger:
+    properties:
+      body:
+        type: string
+      post_id:
+        type: string
     type: object
   genprotos.CommentCReqOrCResOrGResOrURes:
     properties:
@@ -35,11 +47,15 @@ definitions:
       count:
         type: integer
     type: object
-  genprotos.CommentUReq:
+  genprotos.PostCReqForSwagger:
     properties:
       body:
         type: string
-      comment_id:
+      category_id:
+        type: string
+      tags:
+        type: string
+      title:
         type: string
     type: object
   genprotos.PostCReqOrCResOrGResOrUResp:
@@ -66,18 +82,19 @@ definitions:
           $ref: '#/definitions/genprotos.PostCReqOrCResOrGResOrUResp'
         type: array
     type: object
-  genprotos.PostUReq:
+  genprotos.TagCReqOrCRes:
     properties:
-      body:
-        type: string
-      category_id:
-        type: string
       post_id:
         type: string
+      tag:
+        type: string
+    type: object
+  genprotos.TagGAResOrPopularRes:
+    properties:
       tags:
-        type: string
-      title:
-        type: string
+        items:
+          $ref: '#/definitions/genprotos.TagCReqOrCRes'
+        type: array
     type: object
 info:
   contact: {}
@@ -131,7 +148,7 @@ paths:
         name: category
         required: true
         schema:
-          $ref: '#/definitions/genprotos.CategoryCReqOrCResOrGResOrUReqOrURes'
+          $ref: '#/definitions/genprotos.CategoryCReqForSwagger'
       produces:
       - application/json
       responses:
@@ -232,7 +249,7 @@ paths:
         name: category
         required: true
         schema:
-          $ref: '#/definitions/genprotos.CategoryCReqOrCResOrGResOrUReqOrURes'
+          $ref: '#/definitions/genprotos.CategoryCReqForSwagger'
       produces:
       - application/json
       responses:
@@ -268,7 +285,7 @@ paths:
         name: comment
         required: true
         schema:
-          $ref: '#/definitions/genprotos.CommentCReqOrCResOrGResOrURes'
+          $ref: '#/definitions/genprotos.CommentCReqForSwagger'
       produces:
       - application/json
       responses:
@@ -369,7 +386,7 @@ paths:
         name: comment
         required: true
         schema:
-          $ref: '#/definitions/genprotos.CommentUReq'
+          $ref: '#/definitions/genprotos.CommentCReqForSwagger'
       produces:
       - application/json
       responses:
@@ -436,6 +453,40 @@ paths:
       summary: Get all comments
       tags:
       - comment
+  /popular-tags:
+    get:
+      consumes:
+      - application/json
+      description: Gets popular tags
+      parameters:
+      - description: limit
+        in: query
+        name: limit
+        type: integer
+      - description: offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/genprotos.TagGAResOrPopularRes'
+        "400":
+          description: Invalid tag  ID
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get Popular tags
+      tags:
+      - tag
   /post:
     post:
       consumes:
@@ -447,7 +498,7 @@ paths:
         name: post
         required: true
         schema:
-          $ref: '#/definitions/genprotos.PostCReqOrCResOrGResOrUResp'
+          $ref: '#/definitions/genprotos.PostCReqForSwagger'
       produces:
       - application/json
       responses:
@@ -548,7 +599,7 @@ paths:
         name: post
         required: true
         schema:
-          $ref: '#/definitions/genprotos.PostUReq'
+          $ref: '#/definitions/genprotos.PostCReqForSwagger'
       produces:
       - application/json
       responses:

@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"errors"
 	pb "forum-service/forum-protos/genprotos"
 	st "forum-service/storage"
 
@@ -19,7 +20,11 @@ func NewPostService(storage *st.Storage) *PostService {
 
 func (s *PostService) Create(ctx context.Context, post *pb.PostCReqOrCResOrGResOrUResp) (*pb.PostCReqOrCResOrGResOrUResp, error) {
 	post.PostId = uuid.NewString()
-	resp, err := s.storage.PostS.Create(post)
+	valid, tags := ValidateTags(post.Tags)
+	if !valid {
+		return nil, errors.New("invalid tags")
+	}
+	resp, err := s.storage.PostS.Create(post, tags)
 
 	if err != nil {
 		return nil, err
@@ -49,7 +54,12 @@ func (s *PostService) GetAll(ctx context.Context, allPosts *pb.PostGAReq) (*pb.P
 }
 
 func (s *PostService) Update(ctx context.Context, post *pb.PostUReq) (*pb.PostCReqOrCResOrGResOrUResp, error) {
-	resp, err := s.storage.PostS.Update(post)
+	valid, tags := ValidateTags(post.Tags)
+	if !valid {
+		return nil, errors.New("invalid tags")
+	}
+
+	resp, err := s.storage.PostS.Update(post, tags)
 
 	if err != nil {
 		return nil, err
@@ -60,6 +70,5 @@ func (s *PostService) Update(ctx context.Context, post *pb.PostUReq) (*pb.PostCR
 
 func (s *PostService) Delete(ctx context.Context, idReq *pb.PostGReqOrDReq) (*pb.Void, error) {
 	_, err := s.storage.PostS.Delete(idReq)
-
 	return nil, err
 }
