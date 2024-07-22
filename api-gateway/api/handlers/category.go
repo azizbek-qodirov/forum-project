@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -22,12 +23,13 @@ import (
 // @Security BearerAuth
 // @Router /category [post]
 func (h *HTTPHandler) CategoryCreate(c *gin.Context) {
+	fmt.Println("Category create trigger")
 	var req pb.CategoryCReqOrCResOrGResOrUReqOrURes
 	if err := c.BindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request payload"})
+		fmt.Println(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON", "details": err.Error()})
 		return
 	}
-
 	res, err := h.Category.Create(c, &req)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

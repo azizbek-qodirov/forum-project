@@ -31,7 +31,7 @@ func NewPostgresStorage(config config.Config) (*Storage, error) {
 	if err != nil {
 		return nil, err
 	}
-
+	//db := &sql.DB{}
 	c_repo := managers.NewCategoryManager(db)
 	t_repo := managers.NewTagManager(db)
 	cm_repo := managers.NewCommentManager(db)

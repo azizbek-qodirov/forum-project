@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  migrate:
+    image: migrate/migrate
+    networks:
+      - db
+    volumes:
+      - ./migrations:/migrations
+    command: [ "-path", "/migrations", "-database",  "postgres://postgres:QodirovCoder@postgres-auth:5432/forum_auth?sslmode=disable", "up" ]
+    depends_on:
+      - postgres-db
+
+  postgres-db:
+    container_name: postgres-auth
+    image: postgres
+    environment:
+      PGUSER: postgres
+      POSTGRES_PASSWORD: QodirovCoder
+      PGDATA: /data/postgres
+      POSTGRES_DB: forum_auth
+    volumes:
+      - db:/data/postgres
+    ports:
+      - "5433:5432"
+    networks:
+      - db
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d forum_auth"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  auth-service:
+    container_name: auth-service
+    build: .
+    depends_on:
+      - postgres-db
+    ports:
+      - "8088:8088"
+    networks:
+      - db
+
+networks:
+  db:
+    driver: bridge
+
+volumes:
+  db:

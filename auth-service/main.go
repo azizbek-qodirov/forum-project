@@ -28,9 +28,9 @@ func main() {
 	us := service.NewUserService(conn)
 	handler := handlers.NewHandler(us, *logger)
 
-	roter := api.NewRouter(handler)
+	router := api.NewRouter(handler)
 	logger.INFO.Println("Server is running on port ", cf.AUTH_PORT)
-	if err := roter.Run(cf.AUTH_PORT); err != nil {
+	if err := router.Run(cf.AUTH_PORT); err != nil {
 		logger.ERROR.Println(err)
 	}
 }

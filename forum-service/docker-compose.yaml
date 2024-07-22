@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  migrate:
+    image: migrate/migrate
+    networks:
+      - db
+    volumes:
+      - ./migrations:/migrations
+    command: [ "-path", "/migrations", "-database",  "postgres://postgres:QodirovCoder@postgres-forum:5432/forum_db?sslmode=disable", "up" ]
+    depends_on:
+      - postgres-db
+
+  postgres-db:
+    container_name: postgres-forum
+    image: postgres
+    environment:
+      PGUSER: postgres
+      POSTGRES_PASSWORD: QodirovCoder
+      PGDATA: /data/postgres
+      POSTGRES_DB: forum_db
+    volumes:
+      - db:/data/postgres
+    ports:
+      - "5434:5432"
+    networks:
+      - db
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d forum_db"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  forum-service:
+    container_name: forum-service
+    build: .
+    depends_on:
+      - postgres-db
+    ports:
+      - "50051:50051"
+    networks:
+      - db
+
+
+networks:
+  db:
+    external: true
+    name: global-net
+    driver: bridge
+
+volumes:
+  db:

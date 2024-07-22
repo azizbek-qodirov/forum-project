@@ -22,9 +22,11 @@ func main() {
 	config := cf.Load()
 	logger := logger.NewLogger(basepath, config.LOG_PATH) // Don't forget to change your log path
 	em := cf.NewErrorManager(logger)
-
-	ForumConn, err := grpc.NewClient(fmt.Sprintf("localhost%s", config.FORUM_SERVICE_PORT), grpc.WithTransportCredentials(insecure.NewCredentials()))
-	em.CheckErr(err)
+	cll := fmt.Sprintf("forum-service%s", ":50051")
+	//fmt.Println(cll, "2343244444")
+	ForumConn, err := grpc.NewClient(cll, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	fmt.Println(ForumConn, 1111111111111)
+	em.CheckErr(err, 27)
 	defer ForumConn.Close()
 
 	r := api.NewRouter(ForumConn, *logger)

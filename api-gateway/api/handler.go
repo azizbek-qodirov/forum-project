@@ -27,8 +27,8 @@ func NewRouter(connF *grpc.ClientConn, logger logger.Logger) *gin.Engine {
 
 	// Category routes
 	category := protected.Group("/category")
-	category.POST("/", h.CategoryCreate)
-	category.GET("/:id", h.CategoryGet)
+	router.POST("/category", h.CategoryCreate)
+	router.GET("/category/:id", h.CategoryGet)
 	category.PUT("/:id", h.CategoryUpdate)
 	category.DELETE("/:id", h.CategoryDelete)
 	protected.GET("/categories", h.CategoryGetAll)

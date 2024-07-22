@@ -1,5 +1,11 @@
 [
 {
+    "name": "Test Category"
+},
+{
+    "id": "435dfd36-0cb2-401f-b7af-e0e00951f023"
+},
+{
     "--": "POST CREATE",
     "body": "My Ubuntu is not working, there's only black screen and it's not turning on! Can anybody help, please?",
     "category_id": "03875bad-deba-4cd5-a5d1-38b1f2ab5225",
@@ -36,6 +42,7 @@
     "post_id": "*****"
 },
 {
+    "--": "COMMENT UPDATE",
     "body": "Just restart your computer, it must help.",
     "post_id": "*****"
 }

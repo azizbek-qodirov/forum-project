@@ -12,8 +12,8 @@ func NewErrorManager(logger *logger.Logger) *ErrorManager {
 	return &ErrorManager{logger: logger}
 }
 
-func (e *ErrorManager) CheckErr(err error) {
+func (e *ErrorManager) CheckErr(err error, line int) {
 	if err != nil {
-		e.logger.ERROR.Panicln(err.Error())
+		e.logger.ERROR.Panicln(err.Error() + string(line))
 	}
 }
