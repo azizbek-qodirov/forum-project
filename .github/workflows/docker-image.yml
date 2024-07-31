@@ -39,4 +39,8 @@ jobs:
           sudo docker compose up -d
 
     - name: install dependencies
-      run: go mod tidy
+      run: cd ./api-gateway && go mod tidy
+      run : cd ./auth-service && go mod tidy
+      run : cd ./forum-service && go mod tidy
+
+
