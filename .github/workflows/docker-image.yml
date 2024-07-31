@@ -39,5 +39,4 @@ jobs:
           sudo docker compose up -d
 
     - name: install dependencies
-
-
+      run: cd ./api-gateway && go mod tidy
