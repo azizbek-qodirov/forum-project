@@ -47,7 +47,4 @@ jobs:
           echo dir changed to forum-service directory, up and down
 
     - name: install dependencies
-      run: |
-          cd ../api-gateway && go mod tidy
-          cd ../auth-service && go mod tidy
-          cd ../forum-service && go mod tidy
+      run: cd ../api-gateway && go mod tidy
