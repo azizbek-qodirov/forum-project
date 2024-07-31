@@ -36,15 +36,18 @@ jobs:
           sudo docker compose up -d
           echo dir changed to api-gateway directory, up and down
 
-          cd ./auth-service
+          cd ../auth-service
           sudo docker compose down
           sudo docker compose up -d
           echo dir changed to auth-service directory, up and down
 
-          cd ./forum-service
+          cd ../forum-service
           sudo docker compose down 
           sudo docker compose up -d
           echo dir changed to forum-service directory, up and down
 
     - name: install dependencies
-      run: cd ./api-gateway && go mod tidy 
+      run: |
+          cd ../api-gateway && go mod tidy
+          cd ../auth-service && go mod tidy
+          cd ../forum-service && go mod tidy
