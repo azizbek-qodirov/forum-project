@@ -29,22 +29,22 @@ jobs:
           cd forum-project
           sudo docker compose down
           sudo docker compose up -d
-          echo dir changed to forum-project main directory && up and down
+          echo dir changed to forum-project main directory, up and down
 
           cd api-gateway
           sudo docker compose down
           sudo docker compose up -d
-          echo dir changed to api-gateway directory && up and down
+          echo dir changed to api-gateway directory, up and down
 
           cd ./auth-service
           sudo docker compose down
           sudo docker compose up -d
-          echo dir changed to auth-service directory && up and down
+          echo dir changed to auth-service directory, up and down
 
           cd ./forum-service
           sudo docker compose down 
           sudo docker compose up -d
-          echo dir changed to forum-service directory && up and down
+          echo dir changed to forum-service directory, up and down
 
     - name: install dependencies
       run: cd ./api-gateway && go mod tidy 
