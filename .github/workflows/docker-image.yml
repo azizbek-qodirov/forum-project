@@ -38,5 +38,5 @@ jobs:
           sudo docker compose down 
           sudo docker compose up -d
 
-    # - name: install dependencies
-      # run: go mod tidy
+    - name: install dependencies
+      run: go mod tidy
