@@ -6,15 +6,12 @@ on:
   pull_request:
     branches: [ "main" ]
 
-
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout our repository
       uses: actions/checkout@v4
-
     - name: Deploy
       uses: appleboy/ssh-action@master
       with:
